@@ -270,9 +270,33 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
         - HTTPBearer: []
+  /api/handlers/createTransferToken:
+    post:
+      summary: Allows the user to send (transfer) a token to another account
+      operationId: create_transfer_token_tx
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createTransferTokenRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transactionResponse'
+        '500':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
   /api/handlers/tx-link/createTransferSol:
     post:
-      summary: Allows the user to transfer Sol to another account
+      summary: Allows the user to send (transfer) Sol to another account
       operationId: create_transfer_sol_tx
       requestBody:
         content:
