@@ -808,16 +808,13 @@ components:
       properties:
         maxFloorPrice:
           type: number
-          nullable: true
         minFloorPrice:
           type: number
-          nullable: true
         orderBy:
           type: string
           enum:
             - ASC
             - DESC
-          nullable: true
     getCollectionsByFloorPriceResponse:
       type: object
       properties:
