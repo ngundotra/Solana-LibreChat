@@ -11,7 +11,7 @@
     "install": "node config/install.js",
     "upgrade": "node config/upgrade.js",
     "create-user": "node config/create-user.js",
-    "backend": "cross-env NODE_ENV=production node api/server/index.js",
+    "backend": "eval $(grep '^LS_KEY' .env) cross-env LANGCHAIN_TRACING_V2=true LANGCHAIN_ENDPOINT=https://api.smith.langchain.com LANGCHAIN_PROJECT=solana-librechat NODE_ENV=production node api/server/index.js",
     "backend:dev": "cross-env NODE_ENV=development npx nodemon api/server/index.js",
     "build:data-provider": "cd packages/data-provider && npm run build",
     "frontend": "npm run build:data-provider && cd client && npm run build",
