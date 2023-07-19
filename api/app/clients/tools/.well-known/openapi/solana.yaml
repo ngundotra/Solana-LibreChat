@@ -249,7 +249,7 @@ paths:
       summary:
         Calculates the total value of a the address's holdings in USD, with breakdown by NFTs and
         tokens.
-      operationId: query_total_value
+      operationId: query_total_value_in_usd
       requestBody:
         content:
           application/json:
