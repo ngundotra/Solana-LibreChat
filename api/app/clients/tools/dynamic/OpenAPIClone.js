@@ -149,6 +149,7 @@ function convertOpenAPISchemaToJSONSchema(schema, spec) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type: openAPIProperty.type,
         description: openAPIProperty.description,
+        enum: openAPIProperty.enum ?? undefined,
       };
       if (openAPIProperty.required && jsonSchema.required !== undefined) {
         jsonSchema.required.push(propertyName);
@@ -217,7 +218,6 @@ function convertOpenAPISpecToOpenAIFunctions(spec) {
         }
       }
       const requestBody = spec.getRequestBodyForOperation(operation);
-      console.log('req body', requestBody);
       if (requestBody?.content !== undefined) {
         // const requestBodySchemas: Record<string, JsonSchema7ObjectType> = {};
         const requestBodySchemas = {};
@@ -397,4 +397,6 @@ async function createOpenAPIChain(
 
 module.exports = {
   createOpenAPIChain,
+  convertOpenAPIParamsToJSONSchema,
+  convertOpenAPISpecToOpenAIFunctions,
 };
