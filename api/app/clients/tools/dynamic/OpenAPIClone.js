@@ -215,6 +215,7 @@ function convertOpenAPISpecToOpenAIFunctions(spec) {
             convertOpenAPIParamsToJSONSchema(operationParametersByLocation[paramLocation], spec);
         }
       }
+      console.log('requestArgsSchema', requestArgsSchema);
       const requestBody = spec.getRequestBodyForOperation(operation);
       if (requestBody?.content !== undefined) {
         // const requestBodySchemas: Record<string, JsonSchema7ObjectType> = {};
