@@ -132,6 +132,7 @@ function convertOpenAPISchemaToJSONSchema(schema, spec) {
   if (schema.type !== 'object' && schema.type !== 'array') {
     return {
       type: schema.type ?? 'string',
+      enum: schema.enum ?? undefined,
     };
   }
   return Object.keys(schema.properties ?? {}).reduce(
@@ -215,8 +216,8 @@ function convertOpenAPISpecToOpenAIFunctions(spec) {
             convertOpenAPIParamsToJSONSchema(operationParametersByLocation[paramLocation], spec);
         }
       }
-      console.log('requestArgsSchema', requestArgsSchema);
       const requestBody = spec.getRequestBodyForOperation(operation);
+      console.log('req body', requestBody);
       if (requestBody?.content !== undefined) {
         // const requestBodySchemas: Record<string, JsonSchema7ObjectType> = {};
         const requestBodySchemas = {};
