@@ -1,9 +1,7 @@
 openapi: 3.0.2
 info:
-  title: Retrieval Plugin API
-  description:
-    A retrieval API for querying and filtering documents based on natural language queries and
-    metadata
+  title: Solana Plugin API
+  description: An API for retrieving human-readable information about the Solana blockchain.
   version: 1.0.0
 servers:
   - url: https://chatgpt.solanalabs.com
