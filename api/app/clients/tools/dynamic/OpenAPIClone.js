@@ -292,7 +292,6 @@ function convertOpenAPISpecToOpenAIFunctions(spec) {
         formatURL(url, pathParams) + (queryString.length ? `?${queryString}` : '');
       const headers = {};
       let body;
-      console.log('Request args:', requestArgs);
       if (requestArgs.data !== undefined) {
         let contentType = 'text/plain';
         if (typeof requestArgs.data !== 'string') {

@@ -1,10 +1,10 @@
-openapi: 3.1.0
+openapi: 3.0.2
 info:
   title: HelloMoon API
   description: An API for querying information about protocols built on Solana
   version: 1.0.0
 servers:
-  - url: https://chatgpt.solanalabs.com/api/helloMoon
+  - url: https://chatgpt-plugin-git-hello-moon-plugin-solana-labs.vercel.app/api/helloMoon
 paths:
   /jupiter/summary:
     post:
