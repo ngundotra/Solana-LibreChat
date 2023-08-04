@@ -342,6 +342,33 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
         - HTTPBearer: []
+  /api/handlers/walletName:
+    post:
+      summary: Accepts accounts needed to buy the NFT represented by the token
+      operationId: query_wallet_name
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                walletName:
+                  type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transactionResponse'
+        '500':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
 components:
   schemas:
     getAccountInfoRequest:
