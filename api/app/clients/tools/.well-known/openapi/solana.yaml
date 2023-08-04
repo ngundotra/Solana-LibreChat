@@ -344,7 +344,9 @@ paths:
         - HTTPBearer: []
   /api/handlers/walletName:
     post:
-      summary: Resolves wallet names to the actual solana address, and if it is given a wallet name, it looks up all the wallet names associated with that address
+      summary:
+        Resolves wallet names to the actual solana address, and if it is given a wallet name, it looks up all the wallet names associated with that address.
+        This works especially well for .sol, .glow, .backpack, .poor, etc domains.
       operationId: query_wallet_name
       requestBody:
         content:
@@ -353,6 +355,33 @@ paths:
               type: object
               properties:
                 walletName:
+                  type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transactionResponse'
+        '500':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/handlers/tokenName:
+    post:
+      summary: Searches tokens by name, and returns the mint address, logo, name and symbol for up to 10 relevant, verified tokens.
+      operationId: search_token_name
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tokenName:
                   type: string
       responses:
         '200':
