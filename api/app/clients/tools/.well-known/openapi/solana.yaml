@@ -344,7 +344,7 @@ paths:
         - HTTPBearer: []
   /api/handlers/walletName:
     post:
-      summary: Accepts accounts needed to buy the NFT represented by the token
+      summary: Resolves wallet names to the actual solana address, and if it is given a wallet name, it looks up all the wallet names associated with that address
       operationId: query_wallet_name
       requestBody:
         content:
