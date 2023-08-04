@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "tiplink",
+  "name_for_human": "Tiplink",
+  "description_for_model": "Use this plugin for creating TipLinks, which store digital assets on Solana, and allow easy claiming through their URLs.",
+  "description_for_human": "Create Tiplinks to store and transfer digital assets on Solana.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "tiplink.yaml",
+    "has_user_authentication": false
+  },
+  "logo_url": "https://docs.tiplink.io/img/logo.svg",
+  "contact_email": "noah.gundotra@solana.com",
+  "legal_info_url": "https://solanapay.com/tos"
+}
