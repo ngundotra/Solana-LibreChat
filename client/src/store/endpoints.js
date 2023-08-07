@@ -34,17 +34,20 @@ const endpointsFilter = selector({
   },
 });
 
+/**
+ * Config available conversation types
+ */
 const availableEndpoints = selector({
   key: 'availableEndpoints',
   get: ({ get }) => {
     const endpoints = [
-      'azureOpenAI',
-      'openAI',
-      'chatGPTBrowser',
+      // 'azureOpenAI',
+      // 'openAI',
+      // 'chatGPTBrowser',
       'gptPlugins',
-      'bingAI',
-      'google',
-      'anthropic',
+      // 'bingAI',
+      // 'google',
+      // 'anthropic',
     ];
     const f = get(endpointsFilter);
     return endpoints.filter((endpoint) => f[endpoint]);
