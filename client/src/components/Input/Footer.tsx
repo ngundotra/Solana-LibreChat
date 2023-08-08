@@ -11,7 +11,7 @@ export default function Footer() {
         rel="noreferrer"
         className="underline"
       >
-        PENIS {config?.appTitle || 'LibreChat'}
+        {config?.appTitle || 'LibreChat'}
       </a>
       . Serves and searches all conversations reliably. All AI convos under one house. Pay per call
       and not per month (cents compared to dollars).
