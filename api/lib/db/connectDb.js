@@ -27,6 +27,8 @@ async function connectDb() {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       bufferCommands: false,
+      user: process.env.MONGO_USER,
+      pass: process.env.MONGO_PASS,
       // bufferMaxEntries: 0,
       // useFindAndModify: true,
       // useCreateIndex: true
