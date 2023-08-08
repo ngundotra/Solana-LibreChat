@@ -1,17 +1,9 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const MONGO_URI = process.env.MONGO_URI;
-const MONGO_USER = process.env.MONGO_USER;
-const MONGO_PASS = process.env.MONGO_PASS;
 
 if (!MONGO_URI) {
   throw new Error('Please define the MONGO_URI environment variable');
-}
-if (!MONGO_USER) {
-  throw new Error('Please define the MONGO_USER environment variable');
-}
-if (!MONGO_PASS) {
-  throw new Error('Please define the MONGO_PASS environment variable');
 }
 
 /**
@@ -35,8 +27,6 @@ async function connectDb() {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       bufferCommands: false,
-      user: MONGO_USER,
-      pass: MONGO_PASS,
       // bufferMaxEntries: 0,
       // useFindAndModify: true,
       // useCreateIndex: true
