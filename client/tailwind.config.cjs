@@ -37,6 +37,10 @@ module.exports = {
           100: '#8F01CE',
           200: '#7d01b2',
         },
+        sidekickpink: {
+          100: '#E336A3',
+          200: '#b4187b',
+        },
         gray: {
           50: '#f7f7f8',
           100: '#d9d9e3',

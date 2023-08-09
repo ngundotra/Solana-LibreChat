@@ -24,7 +24,7 @@ function Login() {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-white pt-6 sm:pt-0">
+    <div className="bg-sidekickgray-100 flex min-h-screen flex-col items-center justify-center pt-6 sm:pt-0">
       <div className="mt-6 w-96 overflow-hidden bg-white px-6 py-4 sm:max-w-md sm:rounded-lg">
         <h1 className="mb-4 text-center text-3xl font-semibold">
           {localize(lang, 'com_auth_welcome_back')}
@@ -50,7 +50,7 @@ function Login() {
         {startupConfig?.socialLoginEnabled && (
           <>
             <div className="relative mt-6 flex w-full items-center justify-center border border-t uppercase">
-              <div className="absolute bg-white px-3 text-xs">Or</div>
+              <div className="bg-sidekick-gray-100 absolute px-3 text-xs">Or</div>
             </div>
             <div className="mt-8" />
           </>
