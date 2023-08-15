@@ -1,0 +1,18 @@
+{
+    "schema_version": "v1",
+    "name_for_model": "metaplex",
+    "name_for_human": "Metaplex",
+    "description_for_model": "Use this plugin for minting NFTs, compressed NFTs, calculating cost of minting, transfering and burning them using Metaplex.",
+    "description_for_human": "Mint, calculate cost, transfer and burn compressed NFTs.",
+    "auth": {
+	    "type": "none"
+    },
+    "api": {
+	    "type": "openapi",
+	    "url": "metaplex.yaml",
+	    "has_user_authentication": false
+    },
+    "logo_url": "https://docs.metaplex.com/logo/meta-white.svg",
+    "contact_email": "noah.gundotra@solana.com",
+    "legal_info_url": "https://solanapay.com/tos"
+}

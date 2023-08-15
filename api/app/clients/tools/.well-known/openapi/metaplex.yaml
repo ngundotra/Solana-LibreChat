@@ -1,0 +1,183 @@
+openapi: 3.0.2
+info:
+  title: Metaplex API
+  description: An API for interacting with the Solana NFT collections using Metaplex
+  version: 1.0.0
+servers:
+  - url: https://chatgpt-plugin-git-fork-govarun-varun-hello-2415f1-solana-labs.vercel.app
+paths:
+  /api/metaplex/getCNFTRent:
+    post:
+      summary: Shows the rent for minting a compressed NFT collection with the passed parameters
+      description: >-
+        Shows the rent for minting a compressed NFT collection according to the passed enums
+        treeSize and canopySize, there are three sizes small, medium and large for both treeSize and
+        canopySize.  treeSize controls the maxDepth and maxBufferSize. canopySize controls
+        canopyDepth for the  asset proof. User can pass custom for treeSize but then has to pass
+        customMaxDepth and customMaxBufferSize. User can pass custom for canopySize but then has to
+        pass customCanopySize.
+      operationId: get_cnft_rent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/getCNFTRentRequest"
+      responses:
+        "200":
+          description: Successful Response
+  /api/metaplex/getPublicTreeAddresses:
+    post:
+      summary:
+        Shows the public tree addresses on mainnet with available space for minting a compressed NFT
+      description: >-
+        Shows the public tree addresses on mainnet with available space for minting a compressed
+        NFT.  The user should choose one of these addresses to be passed to the createMintCNFT
+        endpoint for minting  a new compressed NFT to the chosen tree.
+      operationId: get_public_tree_addresses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/getPublicTreeAddressesRequest"
+      responses:
+        "200":
+          description: Successful Response
+  /api/handlers/solana-pay/qr/createMintCNFT:
+    post:
+      summary: Helps mint a Compressed NFT given its Metadata URI.
+      description: >-
+        Creates a transaction for minting the compressed NFT with the given metadata uri. A QR code
+        is returned which the user can scan using their wallet and approve the transaction.
+      operationId: create_mint_cnft
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createMintCNFTRequest"
+      responses:
+        "200":
+          description: Successful Response
+  /api/handlers/solana-pay/qr/createMintNFT:
+    post:
+      summary: Helps mint a normal uncompressed NFT given its Name, Metadata URI and the Seller fee.
+      description: >-
+        Creates a transaction for minting the normal uncompressed NFT with the given name, metadata
+        uri and the seller fee. A QR code is returned which the user can scan using their wallet and
+        approve the transaction.
+      operationId: create_mint_nft
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createMintNFTRequest"
+      responses:
+        "200":
+          description: Successful Response
+  /api/handlers/solana-pay/qr/createTransferAsset:
+    post:
+      summary: Helps transfer a compressed NFT from one account to another.
+      description: >-
+        Creates a transaction for transfering the compressed NFT with the given metadata uri. A QR
+        code is returned which the user can scan using their wallet and approve the transaction.
+      operationId: create_transfer_asset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createTransferAssetRequest"
+      responses:
+        "200":
+          description: Successful Response
+  /api/handlers/solana-pay/qr/createBurnAsset:
+    post:
+      summary: Helps burn a a compressed NFT given its asset id.
+      description: >-
+        Creates a transaction for burning the compressed NFT with the given asset id. A QR code is
+        returned which the user can scan using their wallet and approve the transaction.
+      operationId: create_burn_asset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createBurnAssetRequest"
+      responses:
+        "200":
+          description: Successful Response
+components:
+  schemas:
+    getCNFTRentRequest:
+      title: GetCNFTRentRequest
+      type: object
+      required:
+        - treeSize
+        - canopySize
+      properties:
+        treeSize:
+          type: string
+          enum: 
+           - "custom"
+           - "small"
+           - "medium"
+           - "large"
+        canopySize:
+          type: string
+          enum: 
+           - "custom" 
+           - "small"
+           - "medium"
+           - "large"
+           - "none"
+        customMaxDepth:
+          type: number
+          nullable: true
+        customMaxBufferSize:
+          type: number
+          nullable: true
+        customCanopySize:
+          type: number
+          nullable: true
+    createMintCNFTRequest:
+      title: CreateMintCNFTRequest
+      type: object
+      required:
+        - metadataUri
+      properties:
+        metadataUri:
+          type: "string"
+          format: "uri"
+          maxLength: 255
+    createMintNFTRequest:
+      title: CreateMintNFTRequest
+      type: object
+      required:
+        - name
+        - metadataUri
+      properties:
+        name:
+          type: string
+        metadataUri:
+          type: string
+          format: "uri"
+          maxLength: 255
+        sellerFee:
+          type: number
+    createTransferAssetRequest:
+      type: object
+      required:
+        - destination
+        - assetId
+      properties:
+        destination:
+          type: string
+        assetId:
+          type: string
+    createBurnAssetRequest:
+      type: object
+      required:
+        - assetId
+      properties:
+        assetId:
+          type: string
+    getPublicTreeAddressesRequest:
+      type: object
+      properties: {}
