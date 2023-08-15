@@ -7,7 +7,11 @@ const endpointsConfig = atom({
     openAI: null,
     bingAI: null,
     chatGPTBrowser: null,
-    gptPlugins: null,
+    // Note that this must be a non-null object for the default new conversation interface to appear
+    gptPlugins: {
+      availableModels: ['gpt-3.5-turbo'],
+      tools: [],
+    },
     google: null,
     anthropic: null,
   },
