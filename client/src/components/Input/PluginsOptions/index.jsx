@@ -1,17 +1,17 @@
 import { useState, useEffect, memo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-// import { Settings2 } from 'lucide-react';
+import { Settings2 } from 'lucide-react';
 import { ChevronDownIcon } from 'lucide-react';
 import {
-  // SelectDropDown,
+  SelectDropDown,
   PluginStoreDialog,
   MultiSelectDropDown,
   Button,
-  // GPTIcon,
+  GPTIcon,
 } from '~/components';
-// import EndpointOptionsPopover from '../../Endpoints/EndpointOptionsPopover';
-// import SaveAsPresetDialog from '../../Endpoints/SaveAsPresetDialog';
-// import { Settings, AgentSettings } from '../../Endpoints/Plugins/';
+import EndpointOptionsPopover from '../../Endpoints/EndpointOptionsPopover';
+import SaveAsPresetDialog from '../../Endpoints/SaveAsPresetDialog';
+import { Settings, AgentSettings } from '../../Endpoints/Plugins/';
 import { cn } from '~/utils/';
 import store from '~/store';
 import { useAuthContext } from '~/hooks/AuthContext';
@@ -23,12 +23,12 @@ function PluginsOptions() {
   // eslint-disable-next-line
   const [advancedMode, setAdvancedMode] = useState(false);
   const [availableTools, setAvailableTools] = useState([]);
-  // const [showAgentSettings, setShowAgentSettings] = useState(false);
-  // const [showSavePresetDialog, setShowSavePresetDialog] = useState(false);
+  const [showAgentSettings, setShowAgentSettings] = useState(false);
+  const [showSavePresetDialog, setShowSavePresetDialog] = useState(false);
   const [showPluginStoreDialog, setShowPluginStoreDialog] = useState(false);
   const [opacityClass, setOpacityClass] = useState('full-opacity');
   const [conversation, setConversation] = useRecoilState(store.conversation) || {};
-  // const endpointsConfig = useRecoilValue(store.endpointsConfig);
+  const endpointsConfig = useRecoilValue(store.endpointsConfig);
   const messagesTree = useRecoilValue(store.messagesTree);
   const { user } = useAuthContext();
 
@@ -58,24 +58,24 @@ function PluginsOptions() {
     }
   }, [allPlugins, user]);
 
-  // const triggerAgentSettings = () => setShowAgentSettings((prev) => !prev);
-  // const { agentOptions } = conversation;
+  const triggerAgentSettings = () => setShowAgentSettings((prev) => !prev);
+  const { agentOptions } = conversation;
   const { endpoint } = conversation;
 
   if (endpoint !== 'gptPlugins') {
     return null;
   }
-  // const models = endpointsConfig?.['gptPlugins']?.['availableModels'] || [];
+  const models = endpointsConfig?.['gptPlugins']?.['availableModels'] || [];
 
-  // const triggerAdvancedMode = () => setAdvancedMode((prev) => !prev);
+  const triggerAdvancedMode = () => setAdvancedMode((prev) => !prev);
 
-  // const switchToSimpleMode = () => {
-  //   setAdvancedMode(false);
-  // };
+  const switchToSimpleMode = () => {
+    setAdvancedMode(false);
+  };
 
-  // const saveAsPreset = () => {
-  //   setShowSavePresetDialog(true);
-  // };
+  const saveAsPreset = () => {
+    setShowSavePresetDialog(true);
+  };
 
   function checkIfSelected(value) {
     if (!conversation.tools) {
@@ -84,25 +84,25 @@ function PluginsOptions() {
     return conversation.tools.find((el) => el.pluginKey === value) ? true : false;
   }
 
-  // const setOption = (param) => (newValue) => {
-  //   let update = {};
-  //   update[param] = newValue;
-  //   setConversation((prevState) => ({
-  //     ...prevState,
-  //     ...update,
-  //   }));
-  // };
+  const setOption = (param) => (newValue) => {
+    let update = {};
+    update[param] = newValue;
+    setConversation((prevState) => ({
+      ...prevState,
+      ...update,
+    }));
+  };
 
-  // const setAgentOption = (param) => (newValue) => {
-  //   const editableConvo = JSON.stringify(conversation);
-  //   const convo = JSON.parse(editableConvo);
-  //   let { agentOptions } = convo;
-  //   agentOptions[param] = newValue;
-  //   setConversation((prevState) => ({
-  //     ...prevState,
-  //     agentOptions,
-  //   }));
-  // };
+  const setAgentOption = (param) => (newValue) => {
+    const editableConvo = JSON.stringify(conversation);
+    const convo = JSON.parse(editableConvo);
+    let { agentOptions } = convo;
+    agentOptions[param] = newValue;
+    setConversation((prevState) => ({
+      ...prevState,
+      agentOptions,
+    }));
+  };
 
   const setTools = (newValue) => {
     if (newValue === 'pluginStore') {
@@ -166,13 +166,13 @@ function PluginsOptions() {
             )}
           />
         </Button>
-        {/* <SelectDropDown
+        <SelectDropDown
           value={conversation.model}
           setValue={setOption('model')}
           availableValues={models}
           showAbove={true}
           className={cn(cardStyle, 'min-w-60 z-40 flex w-60', !visibile && 'hidden')}
-        /> */}
+        />
         <MultiSelectDropDown
           value={conversation.tools || []}
           isSelected={checkIfSelected}
@@ -182,7 +182,7 @@ function PluginsOptions() {
           showAbove={true}
           className={cn(cardStyle, 'min-w-60 z-50 w-60', !visibile && 'hidden')}
         />
-        {/* <Button
+        <Button
           type="button"
           className={cn(
             cardStyle,
@@ -192,9 +192,9 @@ function PluginsOptions() {
           onClick={triggerAdvancedMode}
         >
           <Settings2 className="w-4 text-gray-600 dark:text-white" />
-        </Button> */}
+        </Button>
       </div>
-      {/* <EndpointOptionsPopover
+      <EndpointOptionsPopover
         content={
           <div className="px-4 py-4">
             {showAgentSettings ? (
@@ -234,12 +234,12 @@ function PluginsOptions() {
           handler: triggerAgentSettings,
           icon: <GPTIcon className="mr-1 mt-[2px] w-[14px]" size={14} />,
         }}
-      /> */}
-      {/* <SaveAsPresetDialog
+      />
+      <SaveAsPresetDialog
         open={showSavePresetDialog}
         onOpenChange={setShowSavePresetDialog}
         preset={conversation}
-      /> */}
+      />
       <PluginStoreDialog isOpen={showPluginStoreDialog} setIsOpen={setShowPluginStoreDialog} />
     </>
   );
