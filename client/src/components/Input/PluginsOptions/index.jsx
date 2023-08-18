@@ -16,6 +16,7 @@ import { cn } from '~/utils/';
 import store from '~/store';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useAvailablePluginsQuery } from '@librechat/data-provider';
+import { AVAILABLE_MODELS } from '~/constants';
 
 function PluginsOptions() {
   const { data: allPlugins } = useAvailablePluginsQuery();
@@ -28,7 +29,7 @@ function PluginsOptions() {
   const [showPluginStoreDialog, setShowPluginStoreDialog] = useState(false);
   const [opacityClass, setOpacityClass] = useState('full-opacity');
   const [conversation, setConversation] = useRecoilState(store.conversation) || {};
-  const endpointsConfig = useRecoilValue(store.endpointsConfig);
+  // const endpointsConfig = useRecoilValue(store.endpointsConfig);
   const messagesTree = useRecoilValue(store.messagesTree);
   const { user } = useAuthContext();
 
@@ -65,7 +66,8 @@ function PluginsOptions() {
   if (endpoint !== 'gptPlugins') {
     return null;
   }
-  const models = endpointsConfig?.['gptPlugins']?.['availableModels'] || [];
+  // const models = endpointsConfig?.['gptPlugins']?.['availableModels'] || [];
+  const models = AVAILABLE_MODELS;
 
   const triggerAdvancedMode = () => setAdvancedMode((prev) => !prev);
 

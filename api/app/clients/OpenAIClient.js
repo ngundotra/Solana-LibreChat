@@ -5,6 +5,8 @@ const {
   get_encoding: getEncoding,
 } = require('@dqbd/tiktoken');
 const { maxTokensMap, genAzureChatCompletion } = require('../../utils');
+const { configDotenv } = require('dotenv');
+configDotenv();
 
 const tokenizersCache = {};
 
@@ -49,7 +51,7 @@ class OpenAIClient extends BaseClient {
     if (!this.modelOptions) {
       this.modelOptions = {
         ...modelOptions,
-        model: modelOptions.model || 'gpt-3.5-turbo',
+        model: modelOptions.model || process.env.SIDEKICK_MODEL,
         temperature:
           typeof modelOptions.temperature === 'undefined' ? 0.8 : modelOptions.temperature,
         top_p: typeof modelOptions.top_p === 'undefined' ? 1 : modelOptions.top_p,

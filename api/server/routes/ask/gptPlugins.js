@@ -11,6 +11,8 @@ const {
   formatAction,
 } = require('./handlers');
 const requireJwtAuth = require('../../../middleware/requireJwtAuth');
+const { configDotenv } = require('dotenv');
+configDotenv();
 
 const abortControllers = new Map();
 
@@ -44,7 +46,7 @@ router.post('/', requireJwtAuth, async (req, res) => {
     promptPrefix: tools.length === 0 ? req.body?.promptPrefix ?? null : null,
     tools,
     modelOptions: {
-      model: req.body?.model ?? 'gpt-4',
+      model: req.body?.model ?? process.env.SIDEKICK_MODEL,
       temperature: req.body?.temperature ?? 0,
       top_p: req.body?.top_p ?? 1,
       presence_penalty: req.body?.presence_penalty ?? 0,

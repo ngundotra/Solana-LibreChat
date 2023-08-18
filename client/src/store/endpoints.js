@@ -53,7 +53,6 @@ const availableEndpoints = selector({
     return endpoints.filter((endpoint) => f[endpoint]);
   },
 });
-// const modelAvailable
 
 export default {
   plugins,
