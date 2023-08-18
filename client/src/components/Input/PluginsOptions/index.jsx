@@ -1,14 +1,7 @@
 import { useState, useEffect, memo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Settings2 } from 'lucide-react';
 import { ChevronDownIcon } from 'lucide-react';
-import {
-  SelectDropDown,
-  PluginStoreDialog,
-  MultiSelectDropDown,
-  Button,
-  GPTIcon,
-} from '~/components';
+import { PluginStoreDialog, MultiSelectDropDown, Button, GPTIcon } from '~/components';
 import EndpointOptionsPopover from '../../Endpoints/EndpointOptionsPopover';
 import SaveAsPresetDialog from '../../Endpoints/SaveAsPresetDialog';
 import { Settings, AgentSettings } from '../../Endpoints/Plugins/';
@@ -16,7 +9,6 @@ import { cn } from '~/utils/';
 import store from '~/store';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useAvailablePluginsQuery } from '@librechat/data-provider';
-import { AVAILABLE_MODELS } from '~/constants';
 
 function PluginsOptions() {
   const { data: allPlugins } = useAvailablePluginsQuery();
@@ -67,9 +59,9 @@ function PluginsOptions() {
     return null;
   }
   // const models = endpointsConfig?.['gptPlugins']?.['availableModels'] || [];
-  const models = AVAILABLE_MODELS;
+  // const models = AVAILABLE_MODELS;
 
-  const triggerAdvancedMode = () => setAdvancedMode((prev) => !prev);
+  // const triggerAdvancedMode = () => setAdvancedMode((prev) => !prev);
 
   const switchToSimpleMode = () => {
     setAdvancedMode(false);
@@ -172,13 +164,13 @@ function PluginsOptions() {
             )}
           />
         </Button>
-        <SelectDropDown
+        {/* <SelectDropDown
           value={conversation.model}
           setValue={setOption('model')}
           availableValues={models}
           showAbove={true}
           className={cn(cardStyle, 'min-w-60 z-40 flex w-60', !visibile && 'hidden')}
-        />
+        /> */}
         <MultiSelectDropDown
           value={conversation.tools || []}
           isSelected={checkIfSelected}
@@ -188,7 +180,7 @@ function PluginsOptions() {
           showAbove={true}
           className={cn(cardStyle, 'min-w-60 z-50 w-60', !visibile && 'hidden')}
         />
-        <Button
+        {/* <Button
           type="button"
           className={cn(
             cardStyle,
@@ -198,7 +190,7 @@ function PluginsOptions() {
           onClick={triggerAdvancedMode}
         >
           <Settings2 className="w-4 text-gray-600 dark:text-white" />
-        </Button>
+        </Button> */}
       </div>
       <EndpointOptionsPopover
         content={

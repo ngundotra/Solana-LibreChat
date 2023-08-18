@@ -122,7 +122,9 @@ const buildDefaultConversation = ({
 };
 
 const getDefaultConversation = ({ conversation, endpointsConfig, preset }) => {
-  const { endpoint: targetEndpoint } = preset || {};
+  // const { endpoint: targetEndpoint } = preset || {};
+  const targetEndpoint = 'gptPlugins';
+  console.log(endpointsConfig);
 
   if (targetEndpoint) {
     // try to use preset
