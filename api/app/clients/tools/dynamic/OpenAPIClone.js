@@ -1,7 +1,7 @@
 const { BaseChain, LLMChain, SequentialChain } = require('langchain/chains');
 const { HumanMessagePromptTemplate, ChatPromptTemplate } = require('langchain/prompts');
 const { JsonOutputFunctionsParser } = require('langchain/output_parsers');
-const { ChatOpenAI } = require('langchain/chat_models/openai');
+const { PromptLayerChatOpenAI } = require('langchain/chat_models/openai');
 
 const { OpenAPISpec } = require('./OpenAPISpecClone');
 
@@ -329,6 +329,8 @@ function convertOpenAPISpecToOpenAIFunctions(spec) {
 }
 
 /**
+ * TODO(ngundotra): SHOULD BE DEPRECATED & DELETED
+ *
  * Create a chain for querying an API from a OpenAPI spec.
  * @param spec OpenAPISpec or url/file/text string corresponding to one.
  * @param options Custom options passed into the chain
@@ -360,7 +362,10 @@ async function createOpenAPIChain(
     throw new Error('Could not parse any valid operations from the provided spec.');
   }
   const {
-    llm = new ChatOpenAI({ modelName: 'gpt-3.5-turbo-0613' }),
+    llm = new PromptLayerChatOpenAI({
+      modelName: process.env.SIDEKICK_MODEL,
+      promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
+    }),
     prompt = ChatPromptTemplate.fromPromptMessages([
       HumanMessagePromptTemplate.fromTemplate(
         'Use the provided API\'s to respond to this user query:\n\n{query}',
@@ -398,4 +403,5 @@ module.exports = {
   createOpenAPIChain,
   convertOpenAPIParamsToJSONSchema,
   convertOpenAPISpecToOpenAIFunctions,
+  SimpleRequestChain,
 };

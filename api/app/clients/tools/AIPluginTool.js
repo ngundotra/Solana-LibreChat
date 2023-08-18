@@ -177,6 +177,7 @@ class AIPluginTool extends Tool {
     const prompt = `${fullDate}\nQuestion: ${input} \n${this.apiSpec}.`;
     console.log(prompt);
     const gptResponse = await this.model.predict(prompt);
+    console.log({ gptResponse });
     let operationId = gptResponse.match(/operationId: (.*)/)?.[1];
     if (!operationId) {
       return 'No operationId found in the response';

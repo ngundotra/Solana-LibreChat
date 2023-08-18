@@ -3,10 +3,11 @@ const { z } = require('zod');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const path = require('path');
-const { DynamicStructuredTool } = require('langchain/tools');
-const { createOpenAPIChain } = require('./OpenAPIClone');
+// const { DynamicStructuredTool } = require('langchain/tools');
+// const { createOpenAPIChain } = require('./OpenAPIClone');
+const AIPluginTool = require('../AIPluginTool');
 
-const SUFFIX = 'Prioritize using responses for subsequent requests to better fulfill the query.';
+// const SUFFIX = 'Prioritize using responses for subsequent requests to better fulfill the query.';
 
 const AuthBearer = z
   .object({
@@ -67,7 +68,13 @@ async function getSpec(url) {
   return ValidSpecPath.parse(url);
 }
 
-async function createOpenAPIPlugin({ data, llm, user, message, verbose = false }) {
+async function createOpenAPIPlugin({
+  data,
+  llm,
+  //user,
+  //message,
+  verbose = false,
+}) {
   let spec;
   try {
     spec = await getSpec(data.api.url, verbose);
@@ -82,7 +89,10 @@ async function createOpenAPIPlugin({ data, llm, user, message, verbose = false }
   }
 
   const headers = {};
-  const { auth, description_for_model } = data;
+  const {
+    auth,
+    //description_for_model
+  } = data;
   if (auth && AuthDefinition.parse(auth)) {
     verbose && console.debug('auth detected', auth);
     const { openai } = auth.verification_tokens;
@@ -92,45 +102,51 @@ async function createOpenAPIPlugin({ data, llm, user, message, verbose = false }
     }
   }
 
-  return new DynamicStructuredTool({
+  return new AIPluginTool({
     name: data.name_for_model,
-    description: `${data.description_for_human} ${SUFFIX}`,
-    schema: z.object({
-      query: z
-        .string()
-        .describe(
-          'For the query, be specific in a conversational manner. It will be interpreted by a human.',
-        ),
-    }),
-    func: async () => {
-      const chainOptions = {
-        llm,
-        verbose,
-      };
-
-      if (data.headers && data.headers['librechat_user_id']) {
-        verbose && console.debug('id detected', headers);
-        headers[data.headers['librechat_user_id']] = user;
-      }
-
-      if (Object.keys(headers).length > 0) {
-        verbose && console.debug('headers detected', headers);
-        chainOptions.headers = headers;
-      }
-
-      if (data.params) {
-        verbose && console.debug('params detected', data.params);
-        chainOptions.params = data.params;
-      }
-
-      const chain = await createOpenAPIChain(spec, chainOptions);
-      const result = await chain.run(
-        `${message}\n\n||>Instructions: ${description_for_model}\n${SUFFIX}`,
-      );
-      console.log('api chain run result', result);
-      return result;
-    },
+    description: `${data.description_for_model}`,
+    openaiSpec: spec,
+    model: llm,
   });
+  // return new DynamicStructuredTool({
+  //   name: data.name_for_model,
+  //   description: `${data.description_for_human} ${SUFFIX}`,
+  //   schema: z.object({
+  //     query: z
+  //       .string()
+  //       .describe(
+  //         'For the query, be specific in a conversational manner. It will be interpreted by a human.',
+  //       ),
+  //   }),
+  //   func: async () => {
+  //     const chainOptions = {
+  //       llm,
+  //       verbose,
+  //     };
+
+  //     if (data.headers && data.headers['librechat_user_id']) {
+  //       verbose && console.debug('id detected', headers);
+  //       headers[data.headers['librechat_user_id']] = user;
+  //     }
+
+  //     if (Object.keys(headers).length > 0) {
+  //       verbose && console.debug('headers detected', headers);
+  //       chainOptions.headers = headers;
+  //     }
+
+  //     if (data.params) {
+  //       verbose && console.debug('params detected', data.params);
+  //       chainOptions.params = data.params;
+  //     }
+
+  //     const chain = await createOpenAPIChain(spec, chainOptions);
+  //     const result = await chain.run(
+  //       `${message}\n\n||>Instructions: ${description_for_model}\n${SUFFIX}`,
+  //     );
+  //     console.log('api chain run result', result);
+  //     return result;
+  //   },
+  // });
 }
 
 module.exports = {

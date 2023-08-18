@@ -1,5 +1,5 @@
 const OpenAIClient = require('./OpenAIClient');
-const { ChatOpenAI } = require('langchain/chat_models/openai');
+const { PromptLayerChatOpenAI } = require('langchain/chat_models/openai');
 const { CallbackManager } = require('langchain/callbacks');
 const { initializeCustomAgent, initializeFunctionsAgent } = require('./agents/');
 const { findMessageContent } = require('../../utils');
@@ -166,7 +166,15 @@ Only respond with your conversational reply to the following User Message:
       console.debug(configOptions);
     }
 
-    return new ChatOpenAI({ credentials, configuration, ...modelOptions }, configOptions);
+    return new PromptLayerChatOpenAI(
+      {
+        promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
+        credentials,
+        configuration,
+        ...modelOptions,
+      },
+      configOptions,
+    );
   }
 
   async initialize({ user, message, onAgentAction, onChainEnd, signal }) {
