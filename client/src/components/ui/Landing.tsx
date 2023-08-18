@@ -32,7 +32,8 @@ export default function Landing() {
           id="landing-title"
           className="mb-10 ml-auto mr-auto mt-6 flex items-center justify-center gap-2 text-center text-4xl font-semibold sm:mb-16 md:mt-[10vh]"
         >
-          {config?.appTitle || 'LibreChat'}
+          {/* {config?.appTitle || 'LibreChat'} */}
+          <img src="/assets/sidekick-large-bubble.png" width={'500px'} alt="Solana Sidekick" />
         </h1>
         <div className="items-start gap-3.5 text-center md:flex">
           <div className="mb-8 flex flex-1 flex-col gap-3.5 md:mb-auto">
@@ -45,23 +46,23 @@ export default function Landing() {
                 onClick={clickHandler}
                 className="w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
               >
-                &quot;{localize(lang, 'com_ui_example_quantum_computing')}&quot; →
+                &quot;{localize(lang, 'com_ui_example_solana_one')}&quot; →
               </button>
               <button
                 onClick={clickHandler}
                 className="w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
               >
-                &quot;{localize(lang, 'com_ui_example_10_year_old_b_day')}&quot; →
+                &quot;{localize(lang, 'com_ui_example_solana_two')}&quot; →
               </button>
               <button
                 onClick={clickHandler}
                 className="w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
               >
-                &quot;{localize(lang, 'com_ui_example_http_in_js')}&quot; →
+                &quot;{localize(lang, 'com_ui_example_solana_three')}&quot; →
               </button>
             </ul>
           </div>
-          <div className="mb-8 flex flex-1 flex-col gap-3.5 md:mb-auto">
+          {/* <div className="mb-8 flex flex-1 flex-col gap-3.5 md:mb-auto">
             <h2 className="m-auto flex items-center gap-3 text-lg font-normal md:flex-col md:gap-2">
               <LightningIcon />
               {localize(lang, 'com_ui_capabilities')}
@@ -94,7 +95,7 @@ export default function Landing() {
                 {localize(lang, 'com_ui_limitation_limited_2021')}
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
         {/* {!showingTemplates && (
           <div className="mt-8 mb-4 flex flex-col items-center gap-3.5 md:mt-16">

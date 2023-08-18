@@ -7,6 +7,7 @@ const buildDefaultConversation = ({
   const lastSelectedModel = JSON.parse(localStorage.getItem('lastSelectedModel')) || {};
   const lastSelectedTools = JSON.parse(localStorage.getItem('lastSelectedTools')) || [];
   const lastBingSettings = JSON.parse(localStorage.getItem('lastBingSettings')) || [];
+  console.log({ lastSelectedTools });
 
   if (endpoint === 'azureOpenAI' || endpoint === 'openAI') {
     conversation = {
@@ -87,8 +88,10 @@ const buildDefaultConversation = ({
     const agentOptions = lastConversationSetup?.agentOptions ?? {
       agent: 'functions',
       skipCompletion: true,
-      model: 'gpt-3.5-turbo',
-      temperature: 0,
+      // model: 'gpt-3.5-turbo',
+      // temperature: 0,
+      model: 'gpt-4',
+      temperature: 0.1,
       // top_p: 1,
       // presence_penalty: 0,
       // frequency_penalty: 0
@@ -96,7 +99,8 @@ const buildDefaultConversation = ({
     conversation = {
       ...conversation,
       endpoint,
-      tools: lastSelectedTools ?? lastConversationSetup?.tools ?? [],
+      tools:
+        lastSelectedTools ?? lastConversationSetup?.tools ?? endpointsConfig[endpoint]?.tools ?? [],
       model:
         lastConversationSetup?.model ??
         lastSelectedModel[endpoint] ??
@@ -104,7 +108,7 @@ const buildDefaultConversation = ({
         'gpt-3.5-turbo',
       chatGptLabel: lastConversationSetup?.chatGptLabel ?? null,
       promptPrefix: lastConversationSetup?.promptPrefix ?? null,
-      temperature: lastConversationSetup?.temperature ?? 0.8,
+      temperature: 0.1, // lastConversationSetup?.temperature ?? 0.1,
       top_p: lastConversationSetup?.top_p ?? 1,
       presence_penalty: lastConversationSetup?.presence_penalty ?? 0,
       frequency_penalty: lastConversationSetup?.frequency_penalty ?? 0,
@@ -127,7 +131,9 @@ const buildDefaultConversation = ({
 };
 
 const getDefaultConversation = ({ conversation, endpointsConfig, preset }) => {
-  const { endpoint: targetEndpoint } = preset || {};
+  // const { endpoint: targetEndpoint } = preset || {};
+  const targetEndpoint = 'gptPlugins';
+  console.log(endpointsConfig);
 
   if (targetEndpoint) {
     // try to use preset

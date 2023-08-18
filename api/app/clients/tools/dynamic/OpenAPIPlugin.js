@@ -4,7 +4,8 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const path = require('path');
 const { DynamicStructuredTool } = require('langchain/tools');
-const { createOpenAPIChain } = require('langchain/chains');
+const { createOpenAPIChain } = require('./OpenAPIClone');
+
 const SUFFIX = 'Prioritize using responses for subsequent requests to better fulfill the query.';
 
 const AuthBearer = z

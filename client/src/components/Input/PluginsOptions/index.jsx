@@ -1,6 +1,7 @@
 import { useState, useEffect, memo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Settings2, ChevronDownIcon } from 'lucide-react';
+import { Settings2 } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 import {
   SelectDropDown,
   PluginStoreDialog,
@@ -19,6 +20,7 @@ import { useAvailablePluginsQuery } from '@librechat/data-provider';
 function PluginsOptions() {
   const { data: allPlugins } = useAvailablePluginsQuery();
   const [visibile, setVisibility] = useState(true);
+  // eslint-disable-next-line
   const [advancedMode, setAdvancedMode] = useState(false);
   const [availableTools, setAvailableTools] = useState([]);
   const [showAgentSettings, setShowAgentSettings] = useState(false);
@@ -57,7 +59,8 @@ function PluginsOptions() {
   }, [allPlugins, user]);
 
   const triggerAgentSettings = () => setShowAgentSettings((prev) => !prev);
-  const { endpoint, agentOptions } = conversation;
+  const { agentOptions } = conversation;
+  const { endpoint } = conversation;
 
   if (endpoint !== 'gptPlugins') {
     return null;

@@ -1,0 +1,251 @@
+openapi: 3.0.2
+info:
+  title: HelloMoon API
+  description: An API for querying information about protocols built on Solana
+  version: 1.0.0
+servers:
+  - url: https://chatgpt-plugin-git-hello-moon-plugin-solana-labs.vercel.app/api/helloMoon
+paths:
+  /jupiter/summary:
+    post:
+      summary: Shows high-level information related to DeFi protocol Jupiter on Solana
+      description:
+        Shows the volume, number of users, and number of transactions on Jupiter over the past 24
+        hours, 7 days, and 30 days in USD
+      operationId: query_jupiter_summary
+      responses:
+        '200':
+          description: Successful Response
+  /jupiter/swaps:
+    post:
+      summary: Shows swap data on Jupiter protocol by amm
+      description:
+        Breakdown of swapping pair volume weekly on and off of Jupiter weekly. Data goes back 90
+        days. Data can be broken down by AMM if needed. Note that swapPair is the combination of the
+        source and destination symbol. The order will be in alphabetical order. For example, "USDC -
+        wSOL"
+      operationId: query_jupiter_swap_summary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jupiterSwapRequest'
+      responses:
+        '200':
+          description: Successful Response
+  /jupiter/historical:
+    post:
+      summary: Shows the volume, number of users, and number of transactions on Jupiter over time
+      description: Shows the volume, number of users, and number of transactions on Jupiter over time
+      operationId: query_jupiter_historical_summary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jupiterHistoricalRequest'
+      responses:
+        '200':
+          description: Successful Response
+  /jupiter/pairs:
+    post:
+      summary: Shows the volume of swaps for token pairs on Jupiter
+      description:
+        Shows the volume of swaps for token pairs on Jupiter. Note that swapPair is the combination
+        of the source and destination symbol. The order will be in alphabetical order. For example,
+        "USDC - wSOL". Note that "USD" is not a valid token, and should be converted to "USDC" when
+        using this API. Also, 24hr is a day, 7D is a week, 30D is a month.
+      operationId: query_jupiter_pair_summary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jupiterPairsRequest'
+      responses:
+        '200':
+          description: Successful Response
+  /defi/programNewUsers:
+    post:
+      summary: Shows new users of a program over time.
+      description:
+        Shows new users of a program over time. A new user is defined as the first time a publicKey
+        has been a fee payer for this program address.
+      operationId: query_program_new_users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/programNewUsersRequest'
+      responses:
+        '200':
+          description: Successful Response
+  /defi/programOverlap:
+    post:
+      summary: Shows overlap between users of two different programs
+      description:
+        Program overlap shows the overlap between the users of two protocols. The data will show
+        what percentage of 'aProgramIds' users also use 'bProgramId'
+      operationId: query_program_user_overlap
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/programOverlapRequest'
+      responses:
+        '200':
+          description: Successful Response
+  /defi/tokenUsers:
+    post:
+      summary: Shows the number of users of a token over time.
+      description:
+        Shows the number of users of a token over time. A user is defined as having sent or received
+        this token on the day specified.
+      operationId: query_token_users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenUsersRequest'
+      responses:
+        '200':
+          description: Successful Response
+  /defi/tokenStats:
+    post:
+      summary: Token stats contains descriptive statistics
+      description:
+        Token stats contains descriptive statistics such as active users, new users, deposits /
+        withdrawals, sellers, buyers, volume, volumeChange
+      operationId: query_token_stats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenStatsRequest'
+      responses:
+        '200':
+          description: Successful Response
+components:
+  schemas:
+    stringComparisonOperator:
+      type: string
+      enum:
+        - '='
+        - '!='
+        - '>'
+        - '<'
+        - '>='
+      nullable: true
+    nullableNumber:
+      type: number
+      nullable: true
+    jupiterSwapRequest:
+      type: object
+      properties:
+        category:
+          type: string
+          enum:
+            - 'whole market'
+            - 'jupiter only'
+            - 'per amm'
+          nullable: true
+        ammProgramId:
+          type: string
+          nullable: true
+        swapPair:
+          type: string
+          nullable: true
+        limit:
+          type: number
+          nullable: true
+    jupiterHistoricalRequest:
+      type: object
+      properties:
+        granularity:
+          type: string
+          enum:
+            - 'daily'
+            - 'weekly'
+            - 'monthly'
+          nullable: true
+        limit:
+          $ref: '#/components/schemas/nullableNumber'
+        numTxnsOperator:
+          $ref: '#/components/schemas/stringComparisonOperator'
+        numTxnsValue:
+          $ref: '#/components/schemas/nullableNumber'
+        usdVolumeValue:
+          $ref: '#/components/schemas/nullableNumber'
+        usdVolumeOperator:
+          $ref: '#/components/schemas/stringComparisonOperator'
+        numUsersValue:
+          $ref: '#/components/schemas/nullableNumber'
+        numUsersOperator:
+          $ref: '#/components/schemas/stringComparisonOperator'
+    jupiterPairsRequest:
+      type: object
+      properties:
+        swapPair:
+          type: string
+          nullable: true
+        limit:
+          $ref: '#/components/schemas/nullableNumber'
+        usdVolume7DOperator:
+          $ref: '#/components/schemas/stringComparisonOperator'
+        usdVolume30DOperator:
+          $ref: '#/components/schemas/stringComparisonOperator'
+        usdVolume24HrOperator:
+          $ref: '#/components/schemas/stringComparisonOperator'
+        usdVolume7DValue:
+          $ref: '#/components/schemas/nullableNumber'
+        usdVolume30DValue:
+          $ref: '#/components/schemas/nullableNumber'
+        usdVolume24HrValue:
+          $ref: '#/components/schemas/nullableNumber'
+    programNewUsersRequest:
+      type: object
+      required:
+        - programId
+      properties:
+        programId:
+          type: string
+        day:
+          type: string
+          nullable: true
+        limit:
+          $ref: '#/components/schemas/nullableNumber'
+    programOverlapRequest:
+      type: object
+      properties:
+        aProgramId:
+          type: string
+        bProgramId:
+          type: string
+        limit:
+          $ref: '#/components/schemas/nullableNumber'
+    tokenUsersRequest:
+      type: object
+      properties:
+        day:
+          type: string
+          nullable: true
+        mint:
+          type: string
+        limit:
+          $ref: '#/components/schemas/nullableNumber'
+    tokenStatsRequest:
+      type: object
+      properties:
+        granularity:
+          type: string
+          enum:
+            - 'one_week'
+            - 'one_month'
+            - 'one_day'
+            - 'six_hour'
+            - 'one_hour'
+            - 'thirty_min'
+          nullable: true
+        mint:
+          type: string
+          nullable: true
+        limit:
+          $ref: '#/components/schemas/nullableNumber'

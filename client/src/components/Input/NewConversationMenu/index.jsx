@@ -37,9 +37,11 @@ export default function NewConversationMenu() {
   const availableEndpoints = useRecoilValue(store.availableEndpoints);
   const endpointsConfig = useRecoilValue(store.endpointsConfig);
   const [presets, setPresets] = useRecoilState(store.presets);
-  const modularEndpoints = new Set(['gptPlugins', 'anthropic', 'google', 'openAI']);
+  // const modularEndpoints = new Set(['gptPlugins', 'anthropic', 'google', 'openAI']);
+  const modularEndpoints = new Set(['gptPlugins']);
 
   const { endpoint, conversationId } = conversation;
+  console.log({ endpoint });
   const { newConversation } = store.useConversation();
 
   const deletePresetsMutation = useDeletePresetMutation();

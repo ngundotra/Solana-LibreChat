@@ -132,7 +132,7 @@ export default function Nav({ navVisible, setNavVisible }) {
   return (
     <>
       <div
-        className="nav active dark flex-shrink-0 overflow-x-hidden bg-gray-900 transition-all duration-200 ease-in-out"
+        className="nav active bg-sidekickgray-200 dark flex-shrink-0 overflow-x-hidden transition-all duration-200 ease-in-out"
         style={{
           width: navVisible ? '260px' : '0px',
           visibility: navVisible ? 'visible' : 'hidden',
@@ -142,6 +142,7 @@ export default function Nav({ navVisible, setNavVisible }) {
           <div className="flex h-full min-h-0 flex-col ">
             <div className="scrollbar-trigger relative flex h-full w-full flex-1 items-start border-white/20">
               <nav className="relative flex h-full flex-1 flex-col space-y-1 p-2">
+                <img src="/assets/logo-sidekick-white.png" alt="Sidekick Logo" />
                 <div className="mb-2 flex h-11 flex-row">
                   <NewChat />
                   <button

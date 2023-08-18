@@ -21,6 +21,7 @@ const initializeFunctionsAgent = async ({
   return await initializeAgentExecutorWithOptions(tools, model, {
     agentType: 'openai-functions',
     memory,
+    maxIterations: 4,
     ...rest,
   });
 };
