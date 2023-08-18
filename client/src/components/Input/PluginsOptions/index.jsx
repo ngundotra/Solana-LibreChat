@@ -116,7 +116,11 @@ function PluginsOptions() {
     if (isSelected) {
       update.tools = current.filter((el) => el.pluginKey !== newValue);
     } else {
-      update.tools = [...current, tool];
+      // TODO(ngundotra): reenable multiple plugins
+      // update.tools = [...current, tool];
+
+      // This effectively sets the tools to just be whatever was just selected
+      update.tools = [tool];
     }
     localStorage.setItem('lastSelectedTools', JSON.stringify(update.tools));
     setConversation((prevState) => ({
