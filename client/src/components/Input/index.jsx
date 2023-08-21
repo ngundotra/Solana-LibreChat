@@ -20,7 +20,6 @@ export default function TextChat({ isSearchView = false }) {
   const isComposing = useRef(false);
 
   const conversation = useRecoilValue(store.conversation);
-  console.log({ conversation });
   const latestMessage = useRecoilValue(store.latestMessage);
   const [text, setText] = useRecoilState(store.text);
 

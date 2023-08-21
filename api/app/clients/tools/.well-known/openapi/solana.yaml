@@ -133,7 +133,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getTransactionResponse'
+                type: object
         '500':
           description: Validation Error
           content:
@@ -693,56 +693,6 @@ components:
           type: string
         devMode:
           type: boolean
-    # TODO: verify this actually describes the response
-    getTransactionResponse:
-      type: object
-      properties:
-        feePayer:
-          type: string
-        success:
-          type: boolean
-        timestamp:
-          type: string
-        tokenBalanceChanges:
-          type: object
-        solBalanceChanges:
-          type: object
-        instructions:
-          type: array
-          items:
-            type: object
-            properties:
-              keys:
-                type: array
-                items:
-                  type: string
-              programId:
-                type: string
-              ixData:
-                oneOf:
-                  - type: string
-                  - type: object
-        transaction:
-          oneOf:
-            - type: object
-            - type: array
-              items:
-                type: string
-              minItems: 2
-        computeUnitsConsumed:
-          type: integer
-          nullable: true
-        txFeeInLamports:
-          type: integer
-          nullable: true
-        logs:
-          type: array
-          items:
-            type: string
-          nullabel: true
-        txVersion:
-          type: string
-          nullable: true
     Meta:
       type: object
       properties:
