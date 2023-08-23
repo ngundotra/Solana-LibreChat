@@ -39,6 +39,7 @@ export default function Message({
     enabled: false,
   });
 
+  console.log({ message });
   // debugging
   // useEffect(() => {
   //   console.log('isSubmitting:', isSubmitting);
@@ -125,6 +126,21 @@ export default function Message({
     });
   };
 
+  let plugins;
+  if (message.plugin && message.plugin.inputs) {
+    if (message.plugin.inputs.length > 1) {
+      plugins = message.plugin.inputs.map((pluginInput, idx) => {
+        if (pluginInput.plugin !== 'self-reflection') {
+          return <Plugin key={idx} plugin={pluginInput} />;
+        } else {
+          return null;
+        }
+      });
+    } else if (message.plugin.inputs.length === 1) {
+      plugins = <Plugin key={0} plugin={message.plugin.inputs[0]} />;
+    }
+  }
+
   return (
     <>
       <div {...props} onWheel={handleWheel}>
@@ -154,7 +170,7 @@ export default function Message({
               </SubRow>
             )}
             <div className="flex flex-grow flex-col gap-3">
-              {message.plugin && <Plugin plugin={message.plugin} />}
+              {plugins}
               {error ? (
                 <div className="flex flex min-h-[20px] flex-grow flex-col items-start gap-2 gap-4  text-red-500">
                   <div className="rounded-md border border-red-500 bg-red-500/10 px-3 py-2 text-sm text-gray-600 dark:text-gray-100">
