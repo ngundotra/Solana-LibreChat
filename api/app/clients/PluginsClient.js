@@ -264,7 +264,7 @@ Only respond with your conversational reply to the following User Message:
       returnIntermediateSteps: true,
       callbackManager: CallbackManager.fromHandlers({
         async handleAgentAction(action) {
-          handleAction(action, onAgentAction);
+          return handleAction(action, onAgentAction);
         },
         async handleChainEnd(action) {
           if (typeof onChainEnd === 'function') {
@@ -281,7 +281,7 @@ Only respond with your conversational reply to the following User Message:
     onAgentAction(
       {
         tool: 'self-reflection',
-        toolInput: `Processing the User's message:\n"${message}"`,
+        input: `Processing the User's message:\n"${message}"`,
         log: '',
       },
       true,

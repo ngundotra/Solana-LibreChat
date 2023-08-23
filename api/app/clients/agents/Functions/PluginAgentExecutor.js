@@ -58,8 +58,7 @@ class PluginAgentExecutor extends BaseChain {
     runManager, //?: CallbackManagerForChainRun
     // -> Promise<ChainValues>
   ) {
-    // console.log('TTT', this.tools);
-    const toolsByName = Object.fromEntries(this.tools.map((t) => [t.name.toLowerCase(), t]));
+    // const toolsByName = Object.fromEntries(this.tools.map((t) => [t.name.toLowerCase(), t]));
     // AgentStep[]
     const steps = [];
     let iterations = 0;
@@ -76,49 +75,14 @@ class PluginAgentExecutor extends BaseChain {
       return { ...returnValues, ...additional };
     };
 
+    // Really this should just call the `agent` 1x
     while (this.shouldContinue(iterations)) {
       console.log('Steps', steps);
-      const output = await this.agent.plan(steps, inputs, runManager?.getChild());
+      const output = await this.agent.plan(steps, inputs, runManager?.getChild(), runManager);
       // Check if the agent has finished
       if ('returnValues' in output) {
         return getOutput(output);
       }
-
-      // let actions: AgentAction[];
-      let actions = [];
-      if (Array.isArray(output)) {
-        actions = output;
-      } else {
-        actions = [output];
-      }
-
-      const newSteps = await Promise.all(
-        actions.map(async (action) => {
-          await runManager?.handleAgentAction(action);
-
-          const tool = toolsByName[action.tool?.toLowerCase()];
-          console.log('Using tool:', tool);
-          const observation = tool
-            ? await tool.call(action.toolInput, runManager?.getChild())
-            : `${action.tool} is not a valid tool, try another one.`;
-          console.log('Using observation:', observation);
-
-          return { action, observation };
-        }),
-      );
-
-      steps.push(...newSteps);
-
-      const lastStep = steps[steps.length - 1];
-      const lastTool = toolsByName[lastStep.action.tool?.toLowerCase()];
-
-      if (lastTool?.returnDirect) {
-        return getOutput({
-          returnValues: { [this.agent.returnValues[0]]: lastStep.observation },
-          log: '',
-        });
-      }
-
       iterations += 1;
     }
 

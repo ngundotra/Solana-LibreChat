@@ -9,7 +9,6 @@ const {
 } = require('langchain/prompts');
 const { convertOpenAPISpecToOpenAIFunctions } = require('../../tools/dynamic/OpenAPIClone');
 const { OpenAPISpec } = require('../../tools/dynamic/OpenAPISpecClone');
-const { getBufferString } = require('langchain/memory');
 const { PromptLayerChatOpenAI } = require('langchain/chat_models/openai');
 const PREFIX = 'You are a helpful AI assistant.';
 
@@ -97,7 +96,7 @@ class FunctionsAgent extends Agent {
    * @param {*} callbackManager
    * @returns
    */
-  async plan(steps, inputs, callbackManager) {
+  async plan(steps, inputs, callbackManager, parentCallbackManager) {
     // Add scratchpad and stop to inputs
     const thoughts = await this.constructScratchPad(steps);
     const newInputs = Object.assign({}, inputs, { agent_scratchpad: thoughts });
@@ -121,9 +120,6 @@ class FunctionsAgent extends Agent {
     let isDone = false;
     let message;
     while (!isDone) {
-      let bufferStr = getBufferString(formatted);
-      console.log({ formatted, bufferStr });
-
       message = await llm.predictMessages(
         formatted,
         { functions: openAIFunctions },
@@ -150,6 +146,13 @@ class FunctionsAgent extends Agent {
           }),
         );
 
+        // Creates new action
+        await parentCallbackManager.handleAgentAction({
+          tool: `${this.tools[0].name}`,
+          method: `${operationId}`,
+          input: JSON.stringify(data),
+        });
+
         let paths = spec.getPathsStrict();
 
         let found = false;
@@ -167,24 +170,50 @@ class FunctionsAgent extends Agent {
                   'Content-Type': 'application/json',
                 },
               });
+
+              // Update existing action
               if (response.status === 200) {
+                // Success case
                 let observation = await response.text();
+                console.log({ observation });
                 formatted.push(new FunctionMessage(observation, toolName));
+                parentCallbackManager.handleAgentAction({
+                  tool: `${this.tools[0].name}`,
+                  method: `${operationId}`,
+                  input: JSON.stringify(data),
+                  output: observation,
+                  actionType: 'update',
+                });
               } else {
-                formatted.push(
-                  new FunctionMessage(
-                    `{"status":"(${response.status}) ${response.statusText}"}`,
-                    toolName,
-                  ),
-                );
+                // Failure case
+                let observation = `{"status":"(${response.status}) ${response.statusText}"}`;
+                console.log({ observation });
+                formatted.push(new FunctionMessage(observation, toolName));
+                parentCallbackManager.handleAgentAction({
+                  tool: `${this.tools[0].name}`,
+                  method: `${operationId}`,
+                  input: JSON.stringify(data),
+                  output: observation,
+                  actionType: 'update',
+                });
               }
               break;
             }
           }
         }
 
+        // Really strange failure case, could be model issue
+        // Ideally should never happen, but in practice...
         if (!found) {
-          formatted.push(new FunctionMessage(`No method named ${operationId} found`, toolName));
+          let observation = `No method named ${operationId} found`;
+          formatted.push(new FunctionMessage(observation, toolName));
+          parentCallbackManager.handleAgentAction({
+            tool: `${this.tools[0].name}`,
+            method: `${operationId}`,
+            input: JSON.stringify(data),
+            output: observation,
+            actionType: 'update',
+          });
         }
       } else {
         isDone = true;
