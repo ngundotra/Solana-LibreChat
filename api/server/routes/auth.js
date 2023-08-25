@@ -9,7 +9,7 @@ const { loginController } = require('../controllers/auth/LoginController');
 const { logoutController } = require('../controllers/auth/LogoutController');
 const requireJwtAuth = require('../../middleware/requireJwtAuth');
 // const requireLocalAuth = require('../../middleware/requireLocalAuth');
-const { requireSolanaAuth } = require('../../middleware/requireSolanaAuth');
+const requireSolanaAuth = require('../../middleware/requireSolanaAuth');
 const { creationController } = require('../controllers/siws/CreationController');
 
 const router = express.Router();
