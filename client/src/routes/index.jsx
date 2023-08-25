@@ -6,9 +6,87 @@ import { Login, Registration, RequestPasswordReset, ResetPassword } from '../com
 import { AuthContextProvider } from '../hooks/AuthContext';
 import ApiErrorWatcher from '../components/Auth/ApiErrorWatcher';
 
+import { useGetStartupConfig } from '@librechat/data-provider';
+
+import { useMemo, useCallback } from 'react';
+
+import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { clusterApiUrl } from '@solana/web3.js';
+
+import { useAuthContext } from '../hooks/AuthContext.tsx';
+
+const WalletLayout = () => {
+  const { data: config } = useGetStartupConfig();
+  const { loginWallet } = useAuthContext();
+
+  const endpoint = useMemo(() => {
+    return config?.heliusRpcUrl ?? clusterApiUrl(WalletAdapterNetwork.Mainnet);
+  }, [config]);
+
+  const autoSignIn = useCallback(async (adapter) => {
+    // If the signIn feature is not available, return true
+    console.log('Signing in...');
+    if (!('signIn' in adapter)) {
+      return true;
+    }
+
+    // Fetch the signInInput from the backend
+    let createResponse;
+    try {
+      createResponse = await fetch('/api/auth/siwsCreate', {
+        method: 'POST',
+      });
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+
+    const input = await createResponse.json();
+
+    // Send the signInInput to the wallet and trigger a sign-in request
+    const output = await adapter.signIn(input);
+
+    // Verify the sign-in output against the generated input server-side
+    let strPayload = {
+      input: JSON.stringify(input),
+      output: JSON.stringify({
+        account: {
+          address: output.account.address,
+          publicKey: Array.from(output.account.publicKey),
+        },
+        signature: Array.from(output['signature']),
+        signedMessage: Array.from(output['signedMessage']),
+      }),
+    };
+
+    loginWallet(strPayload);
+
+    return false;
+  }, []);
+
+  const onError = (error, adapter) => {
+    console.error(error);
+    console.error({ adapter });
+  };
+
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={[]} autoConnect={autoSignIn} onError={onError}>
+        <WalletModalProvider>
+          <Outlet />
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+};
+
 const AuthLayout = () => (
   <AuthContextProvider>
-    <Outlet />
+    <WalletLayout>
+      <Outlet />
+    </WalletLayout>
     <ApiErrorWatcher />
   </AuthContextProvider>
 );

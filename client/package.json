@@ -29,6 +29,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.13",
+    "@librechat/data-provider": "*",
     "@radix-ui/react-alert-dialog": "^1.0.2",
     "@radix-ui/react-checkbox": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.2",
@@ -39,6 +40,11 @@
     "@radix-ui/react-slider": "^1.1.1",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tabs": "^1.0.3",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.34",
+    "@solana/wallet-adapter-react-ui": "^0.9.33",
+    "@solana/wallet-adapter-wallets": "^0.19.20",
+    "@solana/web3.js": "^1.78.4",
     "@tailwindcss/forms": "^0.5.3",
     "@tanstack/react-query": "^4.28.0",
     "@zattoo/use-double-click": "1.2.0",
@@ -63,6 +69,7 @@
     "react-lazy-load": "^4.0.1",
     "react-markdown": "^8.0.6",
     "react-router-dom": "^6.11.2",
+    "react-scripts": "^5.0.1",
     "react-string-replace": "^1.1.0",
     "react-textarea-autosize": "^8.4.0",
     "react-transition-group": "^4.4.5",
@@ -76,8 +83,7 @@
     "tailwind-merge": "^1.9.1",
     "tailwindcss-animate": "^1.0.5",
     "tailwindcss-radix": "^2.8.0",
-    "url": "^0.11.0",
-    "@librechat/data-provider": "*"
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.20.7",

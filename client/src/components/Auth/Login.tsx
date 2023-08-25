@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import LoginForm from './LoginForm';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,8 +8,13 @@ import { localize } from '~/localization/Translation';
 import { useGetStartupConfig } from '@librechat/data-provider';
 import { GoogleIcon, OpenIDIcon, GithubIcon, DiscordIcon } from '~/components';
 
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+
+// Default styles that can be overridden by your app
+import '@solana/wallet-adapter-react-ui/styles.css';
+
 function Login() {
-  const { login, error, isAuthenticated } = useAuthContext();
+  const { error, isAuthenticated } = useAuthContext();
   const { data: startupConfig } = useGetStartupConfig();
 
   const lang = useRecoilValue(store.lang);
@@ -37,7 +41,13 @@ function Login() {
             {localize(lang, 'com_auth_error_login')}
           </div>
         )}
-        <LoginForm onSubmit={login} />
+        <div className="flex items-center justify-center rounded-full bg-black">
+          {/* <div className="flex flex-1"></div> */}
+          <WalletMultiButton />
+        </div>
+        {/* <LoginForm onSubmit={login} />
+        <div>Hello world!</div> */}
+        {/* Your app's components go here, nested within the context providers. */}
         {startupConfig?.registrationEnabled && (
           <p className="my-4 text-center text-sm font-light text-gray-700">
             {' '}

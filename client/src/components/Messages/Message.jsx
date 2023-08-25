@@ -39,7 +39,6 @@ export default function Message({
     enabled: false,
   });
 
-  console.log({ message });
   // debugging
   // useEffect(() => {
   //   console.log('isSubmitting:', isSubmitting);

@@ -41,9 +41,12 @@
   },
   "homepage": "https://github.com/danny-avila/LibreChat#readme",
   "dependencies": {
+    "@solana/wallet-standard-features": "^1.1.0",
+    "@solana/wallet-standard-util": "^1.1.0",
     "axios": "^1.4.0",
     "langchain": "^0.0.112",
     "passport": "^0.6.0",
+    "passport-custom": "^1.1.1",
     "passport-discord": "^0.1.4",
     "passport-github2": "^0.1.12"
   },

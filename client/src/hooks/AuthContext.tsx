@@ -12,10 +12,12 @@ import {
   TLoginResponse,
   setTokenHeader,
   useLoginUserMutation,
+  useLoginWalletUserMutation,
   useLogoutUserMutation,
   useGetUserQuery,
   useRefreshTokenMutation,
   TLoginUser,
+  TLoginWalletUser,
 } from '@librechat/data-provider';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,6 +27,7 @@ export type TAuthContext = {
   isAuthenticated: boolean;
   error: string | undefined;
   login: (data: TLoginUser) => void;
+  loginWallet: (data: TLoginWalletUser) => void;
   logout: () => void;
 };
 
@@ -57,6 +60,7 @@ const AuthContextProvider = ({
   const navigate = useNavigate();
 
   const loginUser = useLoginUserMutation();
+  const loginWalletUser = useLoginWalletUserMutation();
   const logoutUser = useLogoutUserMutation();
   const userQuery = useGetUserQuery({ enabled: !!token });
   const refreshToken = useRefreshTokenMutation();
@@ -96,6 +100,20 @@ const AuthContextProvider = ({
 
   const login = (data: TLoginUser) => {
     loginUser.mutate(data, {
+      onSuccess: (data: TLoginResponse) => {
+        const { user, token } = data;
+        setUserContext({ token, isAuthenticated: true, user, redirect: '/chat/new' });
+      },
+      onError: (error) => {
+        doSetError((error as Error).message);
+        navigate('/login', { replace: true });
+      },
+    });
+  };
+
+  const loginWallet = (data: TLoginWalletUser) => {
+    console.log({ data });
+    loginWalletUser.mutate(data, {
       onSuccess: (data: TLoginResponse) => {
         const { user, token } = data;
         setUserContext({ token, isAuthenticated: true, user, redirect: '/chat/new' });
@@ -183,6 +201,7 @@ const AuthContextProvider = ({
       isAuthenticated,
       error,
       login,
+      loginWallet,
       logout,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

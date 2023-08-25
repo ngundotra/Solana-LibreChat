@@ -9,7 +9,7 @@ import ExportModel from './ExportConversation/ExportModel';
 import ClearConvos from './ClearConvos';
 import Logout from './Logout';
 import { useAuthContext } from '~/hooks/AuthContext';
-import { cn } from '~/utils/';
+import { cn, shortenName } from '~/utils/';
 
 import store from '~/store';
 import { LinkIcon, DotsIcon, GearIcon, TrashIcon } from '~/components';
@@ -59,7 +59,7 @@ export default function NavLinks({ clearSearch, isSearchEnabled }) {
                 </div>
               </div>
               <div className="grow overflow-hidden text-ellipsis whitespace-nowrap text-left text-white">
-                {user?.name || 'USER'}
+                {user?.name ? shortenName(user?.name) : 'USER'}
               </div>
               <DotsIcon />
             </Menu.Button>
