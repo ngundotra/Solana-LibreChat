@@ -120,7 +120,7 @@ const AuthContextProvider = ({
       },
       onError: (error) => {
         doSetError((error as Error).message);
-        navigate('/login', { replace: true });
+        navigate('/chat/new', { replace: true });
       },
     });
   };
@@ -137,7 +137,7 @@ const AuthContextProvider = ({
           token: undefined,
           isAuthenticated: false,
           user: undefined,
-          redirect: '/login',
+          redirect: '/chat/new',
         });
       },
       onError: (error) => {
@@ -151,7 +151,7 @@ const AuthContextProvider = ({
       setUser(userQuery.data);
     } else if (userQuery.isError) {
       doSetError((userQuery?.error as Error).message);
-      navigate('/login', { replace: true });
+      navigate('/chat/new', { replace: true });
     }
     if (error && isAuthenticated) {
       doSetError(undefined);
@@ -161,7 +161,7 @@ const AuthContextProvider = ({
       if (tokenFromCookie) {
         setUserContext({ token: tokenFromCookie, isAuthenticated: true, user: userQuery.data });
       } else {
-        navigate('/login', { replace: true });
+        navigate('/chat/new', { replace: true });
       }
     }
   }, [

@@ -23,7 +23,7 @@ export default function Root() {
   const setIsSearchEnabled = useSetRecoilState(store.isSearchEnabled);
   const setEndpointsConfig = useSetRecoilState(store.endpointsConfig);
   const setPresets = useSetRecoilState(store.presets);
-  const { user, isAuthenticated } = useAuthContext();
+  const { user } = useAuthContext();
 
   const searchEnabledQuery = useGetSearchEnabledQuery();
   const endpointsQuery = useGetEndpointsQuery();
@@ -57,9 +57,9 @@ export default function Root() {
     }
   }, [searchEnabledQuery.data, searchEnabledQuery.isError]);
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  // if (!isAuthenticated) {
+  //   return null;
+  // }
 
   return (
     <>

@@ -17,6 +17,7 @@ import { clusterApiUrl } from '@solana/web3.js';
 
 import { useAuthContext } from '../hooks/AuthContext.tsx';
 
+// TODO(@ngundotra): Remove the non-SIWS wallets for now
 const WalletLayout = () => {
   const { data: config } = useGetStartupConfig();
   const { loginWallet } = useAuthContext();

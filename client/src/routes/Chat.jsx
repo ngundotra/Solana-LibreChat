@@ -34,7 +34,7 @@ export default function Chat() {
   useEffect(() => {
     let timeout = setTimeout(() => {
       if (!isAuthenticated) {
-        navigate('/login', { replace: true });
+        navigate('/chat/new', { replace: true });
       }
     }, 300);
 
@@ -115,9 +115,9 @@ export default function Chat() {
     }
   }, [messagesQuery.data, messagesQuery.isError, setMessages]);
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  // if (!isAuthenticated) {
+  //   return null;
+  // }
 
   // if not a conversation
   if (conversation?.conversationId === 'search') {
