@@ -1,8 +1,6 @@
-const connectDb = require('../../../lib/db/connectDb');
 const User = require('../../../models/User');
 
 const loginController = async (req, res) => {
-  await connectDb();
   try {
     const user = await User.findById(req.user._id);
 

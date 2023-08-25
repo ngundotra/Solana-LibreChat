@@ -41,7 +41,8 @@ config.validate(); // Validate the config
   // OAUTH
   app.use(passport.initialize());
   require('../strategies/jwtStrategy');
-  require('../strategies/localStrategy');
+  // require('../strategies/localStrategy');
+  require('../strategies/solanaStrategy');
   if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     require('../strategies/googleStrategy');
   }
