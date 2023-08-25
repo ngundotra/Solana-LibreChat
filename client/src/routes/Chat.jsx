@@ -144,7 +144,7 @@ export default function Chat() {
   return (
     <>
       {conversationId === 'new' && !messagesTree?.length ? <Landing /> : <Messages />}
-      <TextChat disabled={true} />
+      <TextChat disabled={!isAuthenticated} />
     </>
   );
 }
