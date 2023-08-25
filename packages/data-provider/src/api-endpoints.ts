@@ -58,6 +58,10 @@ export const login = () => {
   return '/api/auth/login';
 };
 
+export const loginWallet = () => {
+  return '/api/auth/siwsVerify';
+};
+
 export const logout = () => {
   return '/api/auth/logout';
 };

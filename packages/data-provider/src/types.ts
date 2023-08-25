@@ -230,6 +230,12 @@ export type TLoginUser = {
   password: string;
 };
 
+/// Used for verifying wallet signature
+export type TLoginWalletUser = {
+  input: string;
+  output: string;
+};
+
 export type TLoginResponse = {
   token: string;
   user: TUser;

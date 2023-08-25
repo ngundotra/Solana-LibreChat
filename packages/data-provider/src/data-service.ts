@@ -80,6 +80,11 @@ export const login = (payload: t.TLoginUser) => {
   return request.post(endpoints.login(), payload);
 };
 
+export const loginWallet = (payload: t.TLoginWalletUser) => {
+  console.log({ payload });
+  return request.post(endpoints.loginWallet(), payload);
+};
+
 export const logout = () => {
   return request.post(endpoints.logout());
 };

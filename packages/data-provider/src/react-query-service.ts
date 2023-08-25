@@ -271,6 +271,26 @@ export const useLoginUserMutation = (): UseMutationResult<
   });
 };
 
+export const useLoginWalletUserMutation = (): UseMutationResult<
+  t.TLoginResponse,
+  unknown,
+  t.TLoginWalletUser,
+  unknown
+> => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (payload: t.TLoginWalletUser) => {
+      console.log('payload', payload);
+      return dataService.loginWallet(payload);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.user]);
+      },
+    },
+  );
+};
+
 export const useRegisterUserMutation = (): UseMutationResult<
   unknown,
   unknown,
