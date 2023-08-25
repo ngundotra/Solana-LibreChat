@@ -26,46 +26,51 @@ const WalletLayout = () => {
     return config?.heliusRpcUrl ?? clusterApiUrl(WalletAdapterNetwork.Mainnet);
   }, [config]);
 
-  const autoSignIn = useCallback(async (adapter) => {
-    // If the signIn feature is not available, return true
-    console.log('Signing in...');
-    if (!('signIn' in adapter)) {
-      return true;
-    }
+  const autoSignIn = useCallback(
+    async (adapter) => {
+      // If the signIn feature is not available, return true
+      if (!('signIn' in adapter)) {
+        console.log({ adapter });
+        // let output = await adapter.signMessage(input);
+        // console.log({ output });
+        return true;
+      }
 
-    // Fetch the signInInput from the backend
-    let createResponse;
-    try {
-      createResponse = await fetch('/api/auth/siwsCreate', {
-        method: 'POST',
-      });
-    } catch (e) {
-      console.error(e);
+      // Fetch the signInInput from the backend
+      let createResponse;
+      try {
+        createResponse = await fetch('/api/auth/siwsCreate', {
+          method: 'POST',
+        });
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+
+      const input = await createResponse.json();
+
+      // Send the signInInput to the wallet and trigger a sign-in request
+      const output = await adapter.signIn(input);
+
+      // Verify the sign-in output against the generated input server-side
+      let strPayload = {
+        input: JSON.stringify(input),
+        output: JSON.stringify({
+          account: {
+            address: output.account.address,
+            publicKey: Array.from(output.account.publicKey),
+          },
+          signature: Array.from(output['signature']),
+          signedMessage: Array.from(output['signedMessage']),
+        }),
+      };
+
+      loginWallet(strPayload);
+
       return false;
-    }
-
-    const input = await createResponse.json();
-
-    // Send the signInInput to the wallet and trigger a sign-in request
-    const output = await adapter.signIn(input);
-
-    // Verify the sign-in output against the generated input server-side
-    let strPayload = {
-      input: JSON.stringify(input),
-      output: JSON.stringify({
-        account: {
-          address: output.account.address,
-          publicKey: Array.from(output.account.publicKey),
-        },
-        signature: Array.from(output['signature']),
-        signedMessage: Array.from(output['signedMessage']),
-      }),
-    };
-
-    loginWallet(strPayload);
-
-    return false;
-  }, []);
+    },
+    [loginWallet],
+  );
 
   const onError = (error, adapter) => {
     console.error(error);

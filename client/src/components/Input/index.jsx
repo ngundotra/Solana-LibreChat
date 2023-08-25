@@ -15,7 +15,7 @@ import { useMessageHandler } from '~/utils/handleSubmit';
 
 import store from '~/store';
 
-export default function TextChat({ isSearchView = false }) {
+export default function TextChat({ isSearchView = false, disabled = false }) {
   const inputRef = useRef(null);
   const isComposing = useRef(false);
 
@@ -27,7 +27,7 @@ export default function TextChat({ isSearchView = false }) {
   const isSubmitting = useRecoilValue(store.isSubmitting);
 
   // TODO: do we need this?
-  const disabled = false;
+  // const disabled = false;
 
   const { ask, stopGenerating } = useMessageHandler();
   const [showBingToneSetting, setShowBingToneSetting] = useState(false);
@@ -117,7 +117,7 @@ export default function TextChat({ isSearchView = false }) {
     }
 
     if (disabled) {
-      return 'Choose another model or customize GPT again';
+      return 'Please sign in with your wallet to chat.';
     }
 
     if (isNotAppendable) {

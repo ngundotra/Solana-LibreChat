@@ -106,7 +106,7 @@ const AuthContextProvider = ({
       },
       onError: (error) => {
         doSetError((error as Error).message);
-        navigate('/login', { replace: true });
+        navigate('/chat/new', { replace: true });
       },
     });
   };

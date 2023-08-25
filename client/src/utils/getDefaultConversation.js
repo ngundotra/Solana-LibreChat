@@ -124,7 +124,6 @@ const buildDefaultConversation = ({
 const getDefaultConversation = ({ conversation, endpointsConfig, preset }) => {
   // const { endpoint: targetEndpoint } = preset || {};
   const targetEndpoint = 'gptPlugins';
-  console.log(endpointsConfig);
 
   if (targetEndpoint) {
     // try to use preset
@@ -138,7 +137,6 @@ const getDefaultConversation = ({ conversation, endpointsConfig, preset }) => {
       });
       return conversation;
     } else {
-      console.log(endpoint);
       console.warn(`Illegal target endpoint ${targetEndpoint} ${endpointsConfig}`);
     }
   }

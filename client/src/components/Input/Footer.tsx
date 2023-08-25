@@ -13,8 +13,9 @@ export default function Footer() {
       >
         {config?.appTitle || 'LibreChat'}
       </a>
-      . Serves and searches all conversations reliably. All AI convos under one house. Pay per call
-      and not per month (cents compared to dollars).
+      {'. Solana protocols made simple.'}
+      {/* . Serves and searches all conversations reliably. All AI convos under one house. Pay per call
+      and not per month (cents compared to dollars). */}
     </div>
   );
 }
