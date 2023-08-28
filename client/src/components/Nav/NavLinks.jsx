@@ -13,7 +13,7 @@ import { cn, shortenName } from '~/utils/';
 
 import store from '~/store';
 import { LinkIcon, DotsIcon, GearIcon, TrashIcon } from '~/components';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { WalletMultiButton } from '@librechat/wallet-adapter-react-ui';
 
 // Default styles that can be overridden by your app
 import '@solana/wallet-adapter-react-ui/styles.css';

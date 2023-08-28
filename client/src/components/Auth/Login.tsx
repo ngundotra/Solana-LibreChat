@@ -8,7 +8,7 @@ import { localize } from '~/localization/Translation';
 import { useGetStartupConfig } from '@librechat/data-provider';
 import { GoogleIcon, OpenIDIcon, GithubIcon, DiscordIcon } from '~/components';
 
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { WalletMultiButton } from '@librechat/wallet-adapter-react-ui';
 import { createSignInMessage } from '@solana/wallet-standard-util';
 
 // Default styles that can be overridden by your app
