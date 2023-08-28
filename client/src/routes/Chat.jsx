@@ -96,7 +96,8 @@ export default function Chat() {
         setShouldNavigate(true);
       }
     }
-    document.title = conversation?.title || config?.appTitle || 'Chat';
+    // document.title = conversation?.title || config?.appTitle || 'Chat';
+    document.title = config?.appTitle;
   }, [conversation, conversationId, config]);
 
   useEffect(() => {
