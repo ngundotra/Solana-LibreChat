@@ -36,12 +36,12 @@ function PluginsOptions() {
   }, [messagesTree, advancedMode]);
 
   useEffect(() => {
+    const pluginStore = { name: 'Plugin store', pluginKey: 'pluginStore', isButton: true };
+    if (!allPlugins || !user || !user.plugins || user.plugins.length === 0) {
+      setAvailableTools([pluginStore]);
+      return;
+    }
     if (allPlugins && user) {
-      const pluginStore = { name: 'Plugin store', pluginKey: 'pluginStore', isButton: true };
-      if (!user.plugins || user.plugins.length === 0) {
-        setAvailableTools([pluginStore]);
-        return;
-      }
       const tools = [...user.plugins]
         .map((el) => {
           return allPlugins.find((plugin) => plugin.pluginKey === el);

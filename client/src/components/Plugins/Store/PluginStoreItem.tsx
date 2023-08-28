@@ -1,5 +1,6 @@
 import { TPlugin } from '@librechat/data-provider';
 import { XCircle, DownloadCloud } from 'lucide-react';
+import { useAuthContext } from '~/hooks';
 
 type TPluginStoreItemProps = {
   plugin: TPlugin;
@@ -9,6 +10,8 @@ type TPluginStoreItemProps = {
 };
 
 function PluginStoreItem({ plugin, onInstall, onUninstall, isInstalled }: TPluginStoreItemProps) {
+  const { user } = useAuthContext();
+
   const handleClick = () => {
     if (isInstalled) {
       onUninstall();
@@ -39,6 +42,7 @@ function PluginStoreItem({ plugin, onInstall, onUninstall, isInstalled }: TPlugi
               <button
                 className="btn btn-primary relative"
                 aria-label={`Install ${plugin.name}`}
+                disabled={!user}
                 onClick={handleClick}
               >
                 <div className="flex w-full items-center justify-center gap-2">
