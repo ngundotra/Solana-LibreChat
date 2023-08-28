@@ -14,9 +14,9 @@ export default function Landing() {
   const conversation = useRecoilValue(store.conversation);
   const lang = useRecoilValue(store.lang);
   // @ts-ignore TODO: Fix anti-pattern - requires refactoring conversation store
-  const { title = localize(lang, 'com_ui_new_chat') } = conversation || {};
+  // const { title = localize(lang, 'com_ui_new_chat') } = conversation || {};
 
-  useDocumentTitle(title);
+  useDocumentTitle('Sidekick');
 
   const clickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
