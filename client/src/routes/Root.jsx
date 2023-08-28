@@ -15,15 +15,19 @@ import { useAuthContext } from '~/hooks/AuthContext';
 import { useSetRecoilState } from 'recoil';
 
 export default function Root() {
-  const [navVisible, setNavVisible] = useState(() => {
-    const savedNavVisible = localStorage.getItem('navVisible');
-    return savedNavVisible !== null ? JSON.parse(savedNavVisible) : true;
-  });
-
   const setIsSearchEnabled = useSetRecoilState(store.isSearchEnabled);
   const setEndpointsConfig = useSetRecoilState(store.endpointsConfig);
   const setPresets = useSetRecoilState(store.presets);
-  const { user } = useAuthContext();
+  const { user, isAuthenticated } = useAuthContext();
+
+  const [navVisible, setNavVisible] = useState(() => {
+    const savedNavVisible = localStorage.getItem('navVisible');
+    return user && isAuthenticated
+      ? savedNavVisible !== null
+        ? JSON.parse(savedNavVisible)
+        : true
+      : true;
+  });
 
   const searchEnabledQuery = useGetSearchEnabledQuery();
   const endpointsQuery = useGetEndpointsQuery();
