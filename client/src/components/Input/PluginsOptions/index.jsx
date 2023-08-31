@@ -42,11 +42,12 @@ function PluginsOptions() {
       return;
     }
     if (allPlugins && user) {
-      const tools = [...user.plugins]
-        .map((el) => {
-          return allPlugins.find((plugin) => plugin.pluginKey === el);
-        })
-        .filter((el) => el);
+      // const tools = [...user.plugins]
+      //   .map((el) => {
+      //     return allPlugins.find((plugin) => plugin.pluginKey === el);
+      //   })
+      //   .filter((el) => el);
+      const tools = allPlugins;
       setAvailableTools([...tools, pluginStore]);
     }
   }, [allPlugins, user]);
