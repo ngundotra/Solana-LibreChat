@@ -9,11 +9,10 @@ const {
 } = require('langchain/prompts');
 const { convertOpenAPISpecToOpenAIFunctions } = require('../../tools/dynamic/OpenAPIClone');
 const { OpenAPISpec } = require('../../tools/dynamic/OpenAPISpecClone');
-const { PromptLayerChatOpenAI } = require('langchain/chat_models/openai');
 const PREFIX = 'You are a helpful AI assistant.';
 
 function parseOutput(message) {
-  if (message.additional_kwargs.function_call) {
+  if (message.additional_kwargs && message.additional_kwargs.function_call) {
     const function_call = message.additional_kwargs.function_call;
     return {
       tool: function_call.name,
@@ -23,6 +22,96 @@ function parseOutput(message) {
   } else {
     return { returnValues: { output: message.text }, log: message.text };
   }
+}
+
+async function openaiChatComplete(messages, functions, model) {
+  let startTime = Date.now() / 1000;
+  let result = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      temperature: 0.1,
+      messages: messages.map((m) => formatMessage(m)),
+      functions,
+    }),
+  });
+  let endTime = Date.now() / 1000;
+  let json = await result.json();
+  if (json['error']) {
+    throw new Error(json['error']);
+  }
+  return {
+    choices: json['choices'],
+    usage: json['usage'],
+    startTime,
+    endTime,
+  };
+}
+
+async function promptLayerTrack(
+  choices,
+  usage,
+  messages,
+  functions,
+  startTime,
+  endTime,
+  tags,
+  model,
+) {
+  let payload = JSON.stringify({
+    // This tag is EXTREMELY important for tracking
+    // otherwise tagging data will be lost
+    function_name: 'openai.ChatCompletion.create',
+    kwargs: {
+      messages: messages.map((m) => formatMessage(m)),
+      model,
+      functions,
+    },
+    request_response: {
+      choices,
+      usage,
+    },
+    tags,
+    request_start_time: startTime,
+    request_end_time: endTime,
+    api_key: process.env.PROMPTLAYER_API_KEY,
+  });
+  let result = await fetch('https://api.promptlayer.com/track-request', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: payload,
+  });
+
+  if (result.status !== 200) {
+    throw new Error(
+      `Failed to record prompt info with status ${result.status}: ${result.statusText}`,
+    );
+  }
+}
+
+// Manual ser/de for BaseMessage (langchain class)
+function formatMessage(message) {
+  let type = message._getType();
+  let role;
+  if (type === 'human') {
+    role = 'user';
+  } else if (type === 'ai') {
+    role = 'assistant';
+  } else {
+    role = type;
+  }
+  return {
+    content: message.content,
+    role,
+    name: message.name,
+    function_call: message.additional_kwargs?.function_call,
+  };
 }
 
 class FunctionsAgent extends Agent {
@@ -104,31 +193,59 @@ class FunctionsAgent extends Agent {
       newInputs.stop = this._stop();
     }
 
-    const llm = new PromptLayerChatOpenAI({
-      modelName: process.env.SIDEKICK_MODEL,
-      promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
-    });
+    // Make this work for multiple tools
+    let spec = new OpenAPISpec(this.tools[0].openaiSpec);
+    const { openAIFunctions } = convertOpenAPISpecToOpenAIFunctions(spec);
+
+    // const llm = new PromptLayerChatOpenAI({
+    //   modelName: process.env.SIDEKICK_MODEL,
+    //   promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
+    //   temperature: 0.1,
+    //   plTags: ['sidekick', 'plugins', this.tools[0].name],
+    //   modelKwargs: {
+    //     functions: openAIFunctions,
+    //   },
+    // });
     const valuesForPrompt = Object.assign({}, newInputs);
 
     const promptValue = await this.llmChain.prompt.formatPromptValue(valuesForPrompt);
     let formatted = promptValue.toChatMessages();
 
-    // Make this work for multiple tools
-    let spec = new OpenAPISpec(this.tools[0].openaiSpec);
-    const { openAIFunctions } = convertOpenAPISpecToOpenAIFunctions(spec);
-
     let isDone = false;
     let message;
     while (!isDone) {
-      message = await llm.predictMessages(
+      // message = await llm.predictMessages(
+      //   formatted,
+      //   { functions: openAIFunctions },
+      //   callbackManager,
+      // );
+
+      // Use a cheaper model, otherwise function calls with Solana model cost 2.5c each
+      const model = 'gpt-3.5-turbo-16k-0613';
+
+      // Manually invoke OpenAI API to get around langchain's stupid SDK which
+      // doesn't return the full response
+      let { choices, usage, startTime, endTime } = await openaiChatComplete(
         formatted,
-        { functions: openAIFunctions },
-        callbackManager,
+        openAIFunctions,
+        model,
       );
+      // Manually log functions, messages, and metadata to PromptLayer
+      await promptLayerTrack(
+        choices,
+        usage,
+        formatted,
+        openAIFunctions,
+        startTime,
+        endTime,
+        ['sidekick', 'plugins', this.tools[0].name],
+        model,
+      );
+      message = choices[0]['message'];
       console.log({ gptMessage: message });
 
-      if (message.additional_kwargs.function_call) {
-        const functionCall = message.additional_kwargs.function_call;
+      if (message.function_call) {
+        const functionCall = message.function_call;
         const operationId = functionCall['name'];
         const args = JSON.parse(functionCall['arguments']);
 
@@ -219,6 +336,9 @@ class FunctionsAgent extends Agent {
         isDone = true;
       }
     }
+
+    // For parsing
+    message.text = message.content;
     return parseOutput(message);
   }
 }
