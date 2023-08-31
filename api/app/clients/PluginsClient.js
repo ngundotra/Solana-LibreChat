@@ -9,11 +9,12 @@ const { HumanChatMessage, AIChatMessage } = require('langchain/schema');
 const { instructions, imageInstructions, errorInstructions } = require('./prompts/instructions');
 
 class PluginsClient extends OpenAIClient {
-  constructor(apiKey, options = {}) {
+  constructor(apiKey, options = {}, user) {
     super(apiKey, options);
     this.sender = options.sender ?? 'Assistant';
     this.tools = [];
     this.actions = [];
+    this.user = user;
     this.openAIApiKey = apiKey;
     this.setOptions(options);
     this.executor = null;
@@ -272,6 +273,7 @@ Only respond with your conversational reply to the following User Message:
           }
         },
       }),
+      user: this.user,
     });
 
     if (this.options.debug) {

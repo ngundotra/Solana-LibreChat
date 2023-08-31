@@ -39,7 +39,7 @@ function makeFunctionsAgent(tools, model, options) {
   const { agentArgs, memory, tags, ...rest } = options;
   const executor = PluginAgentExecutor.fromAgentAndTools({
     tags: [...(tags ?? []), 'openai-functions'],
-    agent: FunctionsAgent.fromLLMAndTools(model, tools, agentArgs),
+    agent: FunctionsAgent.fromLLMAndTools(model, tools, agentArgs, rest['user']),
     tools,
     memory:
       memory ??

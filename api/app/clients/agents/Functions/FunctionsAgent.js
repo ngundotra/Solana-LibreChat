@@ -118,6 +118,7 @@ class FunctionsAgent extends Agent {
   constructor(input) {
     super({ ...input, outputParser: undefined });
     this.tools = input.tools;
+    this.user = input.user;
   }
 
   lc_namespace = ['langchain', 'agents', 'openai'];
@@ -149,7 +150,7 @@ class FunctionsAgent extends Agent {
     ]);
   }
 
-  static fromLLMAndTools(llm, tools, args) {
+  static fromLLMAndTools(llm, tools, args, user) {
     FunctionsAgent.validateTools(tools);
     const prompt = FunctionsAgent.createPrompt(tools, args);
     const chain = new LLMChain({
@@ -161,6 +162,7 @@ class FunctionsAgent extends Agent {
       llmChain: chain,
       allowedTools: tools.map((t) => t.name),
       tools,
+      user,
     });
   }
 
@@ -238,7 +240,7 @@ class FunctionsAgent extends Agent {
         openAIFunctions,
         startTime,
         endTime,
-        ['sidekick', 'plugins', this.tools[0].name],
+        ['sidekick', this.tools[0].name, this.user.username, this.user.id],
         model,
       );
       message = choices[0]['message'];

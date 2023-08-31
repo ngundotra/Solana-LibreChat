@@ -189,7 +189,7 @@ const ask = async ({
       clientOptions.azure = JSON.parse(req.body?.token) ?? getAzureCredentials();
       openAIApiKey = clientOptions.azure.azureOpenAIApiKey;
     }
-    const chatAgent = new PluginsClient(openAIApiKey, clientOptions);
+    const chatAgent = new PluginsClient(openAIApiKey, clientOptions, req.user);
 
     /// Returns the index of the last added action
     const onAgentAction = (action, start = false) => {
