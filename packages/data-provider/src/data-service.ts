@@ -115,6 +115,10 @@ export const getAvailablePlugins = (): Promise<t.TPlugin[]> => {
   return request.get(endpoints.plugins());
 };
 
+export const getPluginDetails = (payload: t.TGetPluginDetails): Promise<t.TPluginDetails[]> => {
+  return request.get(endpoints.pluginDetails() + '?pluginKey=' + payload.pluginKey);
+};
+
 export const updateUserPlugins = (payload: t.TUpdateUserPlugins) => {
   return request.post(endpoints.userPlugins(), payload);
 };

@@ -94,6 +94,10 @@ export const plugins = () => {
   return '/api/plugins';
 };
 
+export const pluginDetails = () => {
+  return '/api/plugins/details';
+};
+
 export const config = () => {
   return '/api/config';
 };

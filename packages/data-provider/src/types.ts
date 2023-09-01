@@ -78,6 +78,23 @@ export type TPlugin = {
   authenticated: boolean;
 };
 
+export type TPluginDetails = {
+  description: string;
+  openAIfunctions: {
+    name: string;
+    description: string;
+    parameters: {
+      properties: never;
+      required: string[];
+      type: string;
+    };
+  }[];
+};
+
+export type TGetPluginDetails = {
+  pluginKey: string;
+};
+
 export type TUpdateUserPlugins = {
   pluginKey: string;
   action: string;
