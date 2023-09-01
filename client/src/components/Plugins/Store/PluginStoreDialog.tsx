@@ -30,7 +30,6 @@ function PluginStoreDialog({ isOpen, setIsOpen }: TPluginStoreDialogProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(1);
   const [maxPage, setMaxPage] = useState<number>(1);
-  const [userPlugins, setUserPlugins] = useState<string[]>([]);
   const [selectedPlugin, setSelectedPlugin] = useState<TPlugin | undefined>(undefined);
   const [showPluginAuthForm, setShowPluginAuthForm] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -123,11 +122,11 @@ function PluginStoreDialog({ isOpen, setIsOpen }: TPluginStoreDialogProps) {
   );
 
   useEffect(() => {
-    if (user) {
-      if (user.plugins) {
-        setUserPlugins(user.plugins);
-      }
-    }
+    // if (user) {
+    //   if (user.plugins) {
+    //     setUserPlugins(user.plugins);
+    //   }
+    // }
     if (availablePlugins) {
       setMaxPage(Math.ceil(availablePlugins.length / itemsPerPage));
     }
@@ -194,7 +193,8 @@ function PluginStoreDialog({ isOpen, setIsOpen }: TPluginStoreDialogProps) {
                       <PluginStoreItem
                         key={index}
                         plugin={plugin}
-                        isInstalled={userPlugins.includes(plugin.pluginKey)}
+                        // isInstalled={userPlugins.includes(plugin.pluginKey)}
+                        isInstalled={true}
                         onInstall={() => onPluginInstall(plugin.pluginKey)}
                         onUninstall={() => onPluginUninstall(plugin.pluginKey)}
                       />

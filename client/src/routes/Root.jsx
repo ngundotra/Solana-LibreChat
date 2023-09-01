@@ -14,6 +14,7 @@ import store from '~/store';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useSetRecoilState } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
+import PluginDetails from '~/components/PluginDetails';
 
 function GiphyEmbed() {
   return (
@@ -29,6 +30,38 @@ function GiphyEmbed() {
           allowFullScreen
         ></iframe>
       </div>
+    </div>
+  );
+}
+
+export function MyNav({ setNavVisible }) {
+  const className =
+    'fixed left-20 right-0 top-0 z-10 flex items-center border-b border-white/20 bg-gray-800 pl-1 pt-1 text-gray-200 sm:pl-3 md:hidden';
+  return (
+    <div className={className}>
+      <button
+        type="button"
+        className="-ml-0.5 -mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-md hover:text-gray-900 focus:outline-none focus:ring-0 focus:ring-inset focus:ring-white dark:hover:text-white"
+        onClick={() => setNavVisible((prev) => !prev)}
+      >
+        <span className="sr-only">Open sidebar</span>
+        <svg
+          stroke="currentColor"
+          fill="none"
+          strokeWidth="1.5"
+          viewBox="0 0 24 24"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-6 w-6"
+          height="1em"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
     </div>
   );
 }
@@ -49,6 +82,14 @@ export default function Root() {
         : true
       : true;
   });
+  const [pluginDetailsVisible, setPluginDetailsVisible] = useState(() => {
+    const savedNavVisible = localStorage.getItem('pluginDetailsVisible');
+    return user && isAuthenticated
+      ? savedNavVisible !== null
+        ? JSON.parse(savedNavVisible)
+        : true
+      : true;
+  });
 
   const searchEnabledQuery = useGetSearchEnabledQuery();
   const endpointsQuery = useGetEndpointsQuery();
@@ -57,6 +98,10 @@ export default function Root() {
   useEffect(() => {
     localStorage.setItem('navVisible', JSON.stringify(navVisible));
   }, [navVisible]);
+
+  useEffect(() => {
+    localStorage.setItem('pluginDetailsVisible', JSON.stringify(pluginDetailsVisible));
+  }, [pluginDetailsVisible]);
 
   useEffect(() => {
     if (endpointsQuery.data) {
@@ -104,10 +149,12 @@ export default function Root() {
               <>
                 <MobileNav setNavVisible={setNavVisible} />
                 <Outlet />
+                {/* <MyNav setNavVisible={setPluginDetailsVisible} /> */}
               </>
             )}
           </div>
         </div>
+        <PluginDetails navVisible={pluginDetailsVisible} setNavVisible={setPluginDetailsVisible} />
       </div>
       <MessageHandler />
     </>
