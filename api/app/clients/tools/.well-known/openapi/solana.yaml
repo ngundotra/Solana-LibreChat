@@ -170,78 +170,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
         - HTTPBearer: []
-  /api/handlers/getCollectionsByFloorPrice:
-    post:
-      summary: Search through Solana NFT collections by floor price
-      operationId: query_nft_collections_by_fp
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/getCollectionsByFloorPriceRequest'
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getCollectionsByFloorPriceResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
-  /api/handlers/getListedCollectionNFTs:
-    post:
-      summary: Returns the listed NFTs in a collection available to purchase
-      operationId: query_listed_nfts_for_collection
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/getListedCollectionNFTsRequest'
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getListedCollectionNFTsResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
-  /api/handlers/getCollectionsByName:
-    post:
-      summary: Searches for NFT collections based on project name
-      operationId: query_nfts_collections_by_name
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/getCollectionsByNameRequest'
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getListedCollectionNFTsResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
   /api/handlers/getTotalValue:
     post:
       summary:
@@ -301,30 +229,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/createTransferSolRequest'
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/transactionResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
-  /api/handlers/tx-link/createBuyNFT:
-    post:
-      summary: Accepts accounts needed to buy the NFT represented by the token
-      operationId: create_buy_nft_tx
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NFTExchangeTransactionRequest'
       responses:
         '200':
           description: Successful Response
