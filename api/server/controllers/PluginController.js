@@ -69,7 +69,28 @@ const getPluginFunctionsController = async (req, res) => {
   res.status(200).json({ openAIFunctions, description: plugin.description });
 };
 
+// Takes a valid solana pay link and returns the actual transaction
+const getSolanaPayController = async (req, res) => {
+  let link = req.body.link;
+  let account = req.body.account;
+  let response = await fetch(link, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      account,
+    }),
+  });
+  if (response.status !== 200) {
+    res.status(response.status).json({ message: 'Error fetching transaction' });
+    return;
+  }
+  res.status(200).send(await response.json());
+};
+
 module.exports = {
   getAvailablePluginsController,
   getPluginFunctionsController,
+  getSolanaPayController,
 };

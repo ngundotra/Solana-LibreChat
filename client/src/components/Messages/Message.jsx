@@ -14,6 +14,18 @@ import { useGetConversationByIdQuery } from '@librechat/data-provider';
 import { cn } from '~/utils/';
 import store from '~/store';
 import getError from '~/utils/getError';
+import SolanaPay from './SolanaPay';
+
+const findSolanaPayLinks = (content) => {
+  // Define the regular expression to search for the specific links
+  // With lookahead to close the expression based on markdown syntax
+  const regex =
+    /https:\/\/chatgpt\.solanalabs\.com\/api\/handlers\/solana-pay\/qr\/[a-zA-Z0-9=&?%-.]+(?=[)"',;])/g;
+
+  // Execute the search
+  const foundLinks = content.match(regex);
+  return foundLinks;
+};
 
 export default function Message({
   conversation,
@@ -126,6 +138,7 @@ export default function Message({
   };
 
   let plugins;
+  // This does the "I'm thinking..." animation
   if (message.plugin && message.plugin.inputs) {
     if (message.plugin.inputs.length > 1) {
       plugins = message.plugin.inputs.map((pluginInput, idx) => {
@@ -140,11 +153,14 @@ export default function Message({
     }
   }
 
+  let links = message && message.text && findSolanaPayLinks(message.text);
+  console.log({ text: message.text, links });
+
   return (
     <>
       <div {...props} onWheel={handleWheel}>
         <div className="relative m-auto flex gap-4 p-4 text-base md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
-          <div className="relative flex h-[30px] w-[30px] flex-col items-end text-right text-xs md:text-sm">
+          <div className="h relative flex w-[30px] flex-col items-end text-right text-xs md:text-sm">
             {typeof icon === 'string' && icon.match(/[^\\x00-\\x7F]+/) ? (
               <span className=" direction-rtl w-40 overflow-x-scroll">{icon}</span>
             ) : (
@@ -156,6 +172,9 @@ export default function Message({
                 siblingCount={siblingCount}
                 setSiblingIdx={setSiblingIdx}
               />
+            </div>
+            <div className="mx-auto py-2">
+              {links && links.map((link, idx) => <SolanaPay link={link} key={idx} />)}
             </div>
           </div>
           <div className="relative flex w-[calc(100%-50px)] flex-col gap-1  md:gap-3 lg:w-[calc(100%-115px)]">
