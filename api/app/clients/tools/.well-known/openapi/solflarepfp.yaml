@@ -6,7 +6,7 @@ info:
 servers:
   - url: https://chatgpt-plugin-git-hello-moon-plugin-solana-labs.vercel.app/api
 paths:
-  /solflare-pfp/getSolflareProfilePic:
+  /solflare-pfp/getProfilePic
     post:
       summary: Shows information about the user's profile picture, if it exists.
       description: >-
