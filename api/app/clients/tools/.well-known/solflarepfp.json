@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "solflarepfp",
+  "name_for_human": "Solflare PFP",
+  "description_for_model": "This extension is for getting and setting the user's profile picture, according to the Solflare Profile Picture protocol.",
+  "description_for_human": "Explore the Solflare Profile Picture Protocol.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "solflarepfp.yaml",
+    "has_user_authentication": false
+  },
+  "logo_url": "https://sidekick.solanalabs.com/assets/solflare.png",
+  "contact_email": "noah.gundotra@solana.com",
+  "legal_info_url": "https://solanapay.com/tos"
+}

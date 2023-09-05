@@ -1,0 +1,57 @@
+openapi: 3.0.2
+info:
+  title: Solflare Profile Pic API
+  description: An API for getting and setting profile pics using Solflare's Profile Pic Standard
+  version: 1.0.0
+servers:
+  - url: https://chatgpt.solanalabs.com/api
+paths:
+  /solflare-pfp/getSolflareProfilePic:
+    post:
+      summary: Shows information about the user's profile picture, if it exists.
+      description: >-
+        Shows information about the user's profile picture, if it exists. If it does not exist, then "isAvailable" will be false.
+      operationId: get_solflare_profile_pic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getSolflareProfilePic'
+      responses:
+        '200':
+          description: Successful Response
+  /handlers/solana-pay/qr/createSetProfilePic:
+    post:
+      summary: Sets the user's profile picture to that of an NFT that they own.
+      description: >-
+        Sets the user's profile picture to that of an NFT that they own.
+      operationId: set_solflare_profile_pic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createSetProfilePic'
+      responses:
+        '200':
+          description: Successful Response
+components:
+  schemas:
+    getSolflareProfilePic:
+      type: object
+      required:
+        - publicKey
+      properties:
+        publicKey:
+          type: string
+    createSetProfilePic:
+      type: object
+      required:
+        - mintPublicKey
+        - tokenAccountPublicKey
+      properties:
+        mintPublicKey:
+          description: Base58 encoded NFT ID, mint address.
+          type: 'string'
+        tokenAccountPublicKey:
+          description: Base58 encoded account address of the token account that owns this NFT
+          type: 'string'
