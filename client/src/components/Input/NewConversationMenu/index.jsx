@@ -41,7 +41,6 @@ export default function NewConversationMenu() {
   const modularEndpoints = new Set(['gptPlugins']);
 
   const { endpoint, conversationId } = conversation;
-  console.log({ endpoint });
   const { newConversation } = store.useConversation();
 
   const deletePresetsMutation = useDeletePresetMutation();

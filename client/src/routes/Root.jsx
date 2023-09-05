@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import {
+  logout,
   useGetEndpointsQuery,
   useGetPresetsQuery,
   useGetSearchEnabledQuery,
@@ -15,6 +16,7 @@ import { useAuthContext } from '~/hooks/AuthContext';
 import { useSetRecoilState } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
 import PluginDetails from '~/components/PluginDetails';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 function GiphyEmbed() {
   return (
@@ -72,6 +74,8 @@ export default function Root() {
   const setPresets = useSetRecoilState(store.presets);
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
+  const { publicKey } = useWallet();
+
   const { user, isAuthenticated } = useAuthContext();
 
   const [navVisible, setNavVisible] = useState(() => {
@@ -126,6 +130,12 @@ export default function Root() {
       console.error('Failed to get search enabled', searchEnabledQuery.error);
     }
   }, [searchEnabledQuery.data, searchEnabledQuery.isError]);
+
+  useEffect(() => {
+    if (!publicKey) {
+      logout();
+    }
+  }, [publicKey]);
 
   // if (!isAuthenticated) {
   //   return null;

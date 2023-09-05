@@ -112,7 +112,6 @@ const AuthContextProvider = ({
   };
 
   const loginWallet = (data: TLoginWalletUser) => {
-    console.log({ data });
     loginWalletUser.mutate(data, {
       onSuccess: (data: TLoginResponse) => {
         const { user, token } = data;

@@ -30,9 +30,6 @@ const WalletLayout = () => {
     async (adapter) => {
       // If the signIn feature is not available, return true
       if (!('signIn' in adapter)) {
-        console.log({ adapter });
-        // let output = await adapter.signMessage(input);
-        // console.log({ output });
         return true;
       }
 
@@ -79,6 +76,7 @@ const WalletLayout = () => {
 
   return (
     <ConnectionProvider endpoint={endpoint}>
+      {/* Phantom is hard coded to be the only wallet right now because it supports SIWS. Hard coding is in packages/react-ui */}
       <WalletProvider wallets={[]} autoConnect={autoSignIn} onError={onError}>
         <WalletModalProvider>
           <Outlet />

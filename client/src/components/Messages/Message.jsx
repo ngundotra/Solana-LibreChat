@@ -154,7 +154,7 @@ export default function Message({
   }
 
   let links = message && message.text && findSolanaPayLinks(message.text);
-  console.log({ text: message.text, links });
+  // console.log({ text: message.text, links });
 
   return (
     <>
