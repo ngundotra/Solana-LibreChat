@@ -19,8 +19,8 @@ const MessageHeader = ({ isSearchView = false }) => {
       <span className="py-0.25 ml-1 rounded bg-blue-200 px-1 text-[10px] font-semibold uppercase text-[#4559A4]">
         beta
       </span>
-      <span className="px-1">•</span>
-      Model: {model}
+      {/* <span className="px-1">•</span>
+      Model: {model} */}
     </>
   );
 
