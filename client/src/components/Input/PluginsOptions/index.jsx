@@ -37,7 +37,7 @@ function PluginsOptions() {
 
   useEffect(() => {
     const pluginStore = { name: 'Plugin store', pluginKey: 'pluginStore', isButton: true };
-    if (!allPlugins || !user || !user.plugins || user.plugins.length === 0) {
+    if (!allPlugins || !user) {
       setAvailableTools([pluginStore]);
       return;
     }
