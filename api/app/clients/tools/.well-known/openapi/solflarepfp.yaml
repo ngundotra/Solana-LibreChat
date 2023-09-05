@@ -4,7 +4,7 @@ info:
   description: An API for getting and setting profile pics using Solflare's Profile Pic Standard
   version: 1.0.0
 servers:
-  - url: https://chatgpt.solanalabs.com/api
+  - url: https://chatgpt-plugin-git-hello-moon-plugin-solana-labs.vercel.app/api
 paths:
   /solflare-pfp/getSolflareProfilePic:
     post:

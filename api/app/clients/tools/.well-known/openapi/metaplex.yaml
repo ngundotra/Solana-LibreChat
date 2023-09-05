@@ -4,7 +4,7 @@ info:
   description: An API for interacting with the Solana NFT collections using Metaplex
   version: 1.0.0
 servers:
-  - url: https://chatgpt-plugin-git-fork-govarun-varun-hello-2415f1-solana-labs.vercel.app
+  - url: https://chatgpt-plugin-git-hello-moon-plugin-solana-labs.vercel.app
 paths:
   /api/metaplex/getCNFTRent:
     post:
@@ -21,14 +21,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/getCNFTRentRequest"
+              $ref: '#/components/schemas/getCNFTRentRequest'
       responses:
-        "200":
+        '200':
           description: Successful Response
   /api/metaplex/getPublicTreeAddresses:
     post:
-      summary:
-        Shows the public tree addresses on mainnet with available space for minting a compressed NFT
+      summary: Shows the public tree addresses on mainnet with available space for minting a compressed NFT
       description: >-
         Shows the public tree addresses on mainnet with available space for minting a compressed
         NFT.  The user should choose one of these addresses to be passed to the createMintCNFT
@@ -38,9 +37,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/getPublicTreeAddressesRequest"
+              $ref: '#/components/schemas/getPublicTreeAddressesRequest'
       responses:
-        "200":
+        '200':
           description: Successful Response
   /api/handlers/solana-pay/qr/createMintCNFT:
     post:
@@ -53,9 +52,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/createMintCNFTRequest"
+              $ref: '#/components/schemas/createMintCNFTRequest'
       responses:
-        "200":
+        '200':
           description: Successful Response
   /api/handlers/solana-pay/qr/createMintNFT:
     post:
@@ -69,9 +68,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/createMintNFTRequest"
+              $ref: '#/components/schemas/createMintNFTRequest'
       responses:
-        "200":
+        '200':
           description: Successful Response
   /api/handlers/solana-pay/qr/createTransferAsset:
     post:
@@ -84,9 +83,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/createTransferAssetRequest"
+              $ref: '#/components/schemas/createTransferAssetRequest'
       responses:
-        "200":
+        '200':
           description: Successful Response
   /api/handlers/solana-pay/qr/createBurnAsset:
     post:
@@ -99,9 +98,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/createBurnAssetRequest"
+              $ref: '#/components/schemas/createBurnAssetRequest'
       responses:
-        "200":
+        '200':
           description: Successful Response
 components:
   schemas:
@@ -114,19 +113,19 @@ components:
       properties:
         treeSize:
           type: string
-          enum: 
-           - "custom"
-           - "small"
-           - "medium"
-           - "large"
+          enum:
+            - 'custom'
+            - 'small'
+            - 'medium'
+            - 'large'
         canopySize:
           type: string
-          enum: 
-           - "custom" 
-           - "small"
-           - "medium"
-           - "large"
-           - "none"
+          enum:
+            - 'custom'
+            - 'small'
+            - 'medium'
+            - 'large'
+            - 'none'
         customMaxDepth:
           type: number
           nullable: true
@@ -143,8 +142,8 @@ components:
         - metadataUri
       properties:
         metadataUri:
-          type: "string"
-          format: "uri"
+          type: 'string'
+          format: 'uri'
           maxLength: 255
     createMintNFTRequest:
       title: CreateMintNFTRequest
@@ -157,7 +156,7 @@ components:
           type: string
         metadataUri:
           type: string
-          format: "uri"
+          format: 'uri'
           maxLength: 255
         sellerFee:
           type: number
