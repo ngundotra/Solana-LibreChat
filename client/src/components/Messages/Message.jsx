@@ -19,8 +19,9 @@ import SolanaPay from './SolanaPay';
 const findSolanaPayLinks = (content) => {
   // Define the regular expression to search for the specific links
   // With lookahead to close the expression based on markdown syntax
+  // Need the \/+ in case backend returns a double slash between https://domain//api/<etc>
   const regex =
-    /https:\/\/chatgpt\.solanalabs\.com\/api\/handlers\/solana-pay\/qr\/[a-zA-Z0-9=&?%-.]+(?=[)"',;])/g;
+    /https?:\/\/[a-zA-Z0-9-.]+\/+api\/handlers\/solana-pay\/qr\/[a-zA-Z0-9=&?%-.]+(?=[)"',;])/g;
 
   // Execute the search
   const foundLinks = content.match(regex);
