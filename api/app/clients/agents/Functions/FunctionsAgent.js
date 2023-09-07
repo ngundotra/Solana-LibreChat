@@ -9,7 +9,11 @@ const {
 } = require('langchain/prompts');
 const { convertOpenAPISpecToOpenAIFunctions } = require('../../tools/dynamic/OpenAPIClone');
 const { OpenAPISpec } = require('../../tools/dynamic/OpenAPISpecClone');
-const PREFIX = 'You are a helpful AI assistant.';
+const PREFIX = `You are an AI assistant tasked with helping the user navigate the Solana blockchain and its ecosystem.
+  Never ask the user for their seed phrase, private key, or other data that could be used to recreate their private key or 
+  other sensitive information. If the user asks for help with a tool that requires a seed phrase, private key, or other sensitive information,
+  please refuse.
+  `;
 
 function parseOutput(message) {
   if (message.additional_kwargs && message.additional_kwargs.function_call) {
@@ -143,7 +147,9 @@ class FunctionsAgent extends Agent {
     const { prefix = PREFIX } = fields || {};
 
     return ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(`${prefix}`),
+      SystemMessagePromptTemplate.fromTemplate(
+        `${prefix}\n\nThe current user's Solana wallet address is: {wallet_address}. \nToday's date is: ${new Date()}`,
+      ),
       new MessagesPlaceholder('chat_history'),
       HumanMessagePromptTemplate.fromTemplate('Query: {input}'),
       new MessagesPlaceholder('agent_scratchpad'),
@@ -209,8 +215,10 @@ class FunctionsAgent extends Agent {
     //   },
     // });
     const valuesForPrompt = Object.assign({}, newInputs);
+    valuesForPrompt['wallet_address'] = this.user.username;
 
     const promptValue = await this.llmChain.prompt.formatPromptValue(valuesForPrompt);
+    console.log({ promptValue });
     let formatted = promptValue.toChatMessages();
 
     let isDone = false;
