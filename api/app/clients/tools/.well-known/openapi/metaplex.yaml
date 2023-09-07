@@ -41,7 +41,7 @@ paths:
       responses:
         '200':
           description: Successful Response
-  /api/handlers/solana-pay/qr/createMintCNFT:
+  /api/handlers/solana-pay/tx-link/createMintCNFT:
     post:
       summary: Helps mint a Compressed NFT given its Metadata URI.
       description: >-
@@ -56,7 +56,7 @@ paths:
       responses:
         '200':
           description: Successful Response
-  /api/handlers/solana-pay/qr/createMintNFT:
+  /api/handlers/solana-pay/tx-link/createMintNFT:
     post:
       summary: Helps mint a normal uncompressed NFT given its Name, Metadata URI and the Seller fee.
       description: >-
@@ -72,7 +72,7 @@ paths:
       responses:
         '200':
           description: Successful Response
-  /api/handlers/solana-pay/qr/createTransferAsset:
+  /api/handlers/solana-pay/tx-link/createTransferAsset:
     post:
       summary: Helps transfer a compressed NFT from one account to another.
       description: >-
@@ -87,7 +87,7 @@ paths:
       responses:
         '200':
           description: Successful Response
-  /api/handlers/solana-pay/qr/createBurnAsset:
+  /api/handlers/solana-pay/tx-link/createBurnAsset:
     post:
       summary: Helps burn a a compressed NFT given its asset id.
       description: >-
