@@ -50,14 +50,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getAccountInfoResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
   /api/handlers/getTokenAccounts:
     post:
       summary: getTokenAccounts
@@ -74,18 +66,6 @@ paths:
       responses:
         '200':
           description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getTokenAccountsResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
   /api/handlers/getBalance:
     post:
       summary: getBalance
@@ -102,18 +82,6 @@ paths:
       responses:
         '200':
           description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getBalanceResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
   /api/handlers/getTransaction:
     post:
       summary: getTransaction
@@ -130,18 +98,6 @@ paths:
       responses:
         '200':
           description: Successful Response
-          content:
-            application/json:
-              schema:
-                type: object
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
   /api/handlers/getSignaturesForAddress:
     post:
       summary: getSignaturesForAddress
@@ -162,14 +118,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getSignaturesForAddressResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
   /api/handlers/getTotalValue:
     post:
       summary:
@@ -184,18 +132,6 @@ paths:
       responses:
         '200':
           description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getTotalValueResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
   /api/handlers/tx-link/createTransferToken:
     post:
       summary: Allows the user to send (transfer) a token to another account
@@ -208,16 +144,6 @@ paths:
       responses:
         '200':
           description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/transactionResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
       security:
         - HTTPBearer: []
   /api/handlers/tx-link/createTransferSol:
@@ -232,18 +158,6 @@ paths:
       responses:
         '200':
           description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/transactionResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-      security:
-        - HTTPBearer: []
   /api/handlers/walletName:
     post:
       summary:
@@ -261,16 +175,6 @@ paths:
       responses:
         '200':
           description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/transactionResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
       security:
         - HTTPBearer: []
   /api/handlers/tokenName:
@@ -288,16 +192,6 @@ paths:
       responses:
         '200':
           description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/transactionResponse'
-        '500':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
       security:
         - HTTPBearer: []
 components:

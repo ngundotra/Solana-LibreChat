@@ -20,7 +20,13 @@ function capitalizeFirstLetterOfEachWord(str) {
 // ],
 
 const PLUGIN_EXAMPLES = {
-  metaplex: {},
+  metaplex: {
+    get_public_tree_addresses: ['What are some trees that I can mint cnfts to?'],
+    get_cnft_rent: [
+      'How much does it cost to create a bubblegum tree with max size and max canopy cache?',
+      'How much does it cost to create a bubblegum tree with minimum size and full canopy cache?',
+    ],
+  },
   tiplink: {
     tiplink_make_link: ['Make me a tiplink'],
   },
@@ -37,7 +43,7 @@ const PLUGIN_EXAMPLES = {
       'Show me stats for USDC this week',
       'Show me stats for Rollbit token this week',
     ],
-    search_token_name: ['What is address for Rollbit token?'],
+    search_token_name: ['What is the address for the Rollbit token?'],
   },
   solflarepfp: {
     get_solflare_profile_pic: ['What\'s my profile pic?'],
@@ -52,7 +58,7 @@ const PLUGIN_EXAMPLES = {
     query_account_info: ['What is stored in account DRqdtkRmVy4b7Xw2e44PEWk6MHhFJLnBDEhgGBkDSa4e?'],
     query_token_accounts: ['What tokens do I own?'],
     query_transaction: ['What happened in toly.sol\'s latest transaction?'],
-    query_balance: ['How much SOL do I have?'],
+    query_balance: ['How much Sol do I have?'],
     query_wallet_name: ['Who owns raj.sol?', 'Who owns armani.backpack?'],
     search_token_name: ['What is the address for USDC?'],
     create_transfer_token_tx: [

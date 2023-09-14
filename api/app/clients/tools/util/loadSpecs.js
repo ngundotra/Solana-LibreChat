@@ -52,7 +52,11 @@ async function loadSpecs({ llm, user, message, map = false, verbose = false }) {
   }
 
   for (const file of files) {
-    if (path.extname(file) === '.json') {
+    if (
+      path.extname(file) === '.json' &&
+      file.search('metaplex') === -1 &&
+      file.search('solflarepfp') === -1
+    ) {
       const filePath = path.join(directoryPath, file);
       const fileContent = await fs.promises.readFile(filePath, 'utf8');
       const json = JSON.parse(fileContent);

@@ -25,7 +25,7 @@ paths:
       responses:
         '200':
           description: Successful Response
-  /api/metaplex/getPublicTreeAddresses:
+  /api/metaplex/getPublicTree:
     post:
       summary: Shows the public tree addresses on mainnet with available space for minting a compressed NFT
       description: >-
@@ -47,7 +47,7 @@ paths:
       description: >-
         Creates a transaction for minting the compressed NFT with the given metadata uri. A QR code
         is returned which the user can scan using their wallet and approve the transaction.
-      operationId: create_mint_cnft
+      operationId: mint_cnft_tx
       requestBody:
         content:
           application/json:
@@ -63,7 +63,7 @@ paths:
         Creates a transaction for minting the normal uncompressed NFT with the given name, metadata
         uri and the seller fee. A QR code is returned which the user can scan using their wallet and
         approve the transaction.
-      operationId: create_mint_nft
+      operationId: mint_nft_tx
       requestBody:
         content:
           application/json:
@@ -78,7 +78,7 @@ paths:
       description: >-
         Creates a transaction for transfering the compressed NFT with the given metadata uri. A QR
         code is returned which the user can scan using their wallet and approve the transaction.
-      operationId: create_transfer_asset
+      operationId: transfer_asset_tx
       requestBody:
         content:
           application/json:
@@ -93,7 +93,7 @@ paths:
       description: >-
         Creates a transaction for burning the compressed NFT with the given asset id. A QR code is
         returned which the user can scan using their wallet and approve the transaction.
-      operationId: create_burn_asset
+      operationId: burn_asset_tx
       requestBody:
         content:
           application/json:
