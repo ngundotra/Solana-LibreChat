@@ -196,7 +196,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
         - HTTPBearer: []
-  /api/handlers/createTransferToken:
+  /api/handlers/tx-link/createTransferToken:
     post:
       summary: Allows the user to send (transfer) a token to another account
       operationId: create_transfer_token_tx
