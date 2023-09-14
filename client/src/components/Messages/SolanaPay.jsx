@@ -4,7 +4,7 @@ import { VersionedTransaction } from '@solana/web3.js';
 import axios from 'axios';
 import { Buffer } from 'buffer';
 
-export default function SolanaPay({ link }) {
+export default function SolanaPay({ link, disabled }) {
   const { publicKey, signTransaction } = useWallet();
 
   const sign = useMemo(
@@ -28,13 +28,9 @@ export default function SolanaPay({ link }) {
   );
 
   return (
-    <div
-      height={36}
-      width={36}
-      className="flex place-items-center rounded border-2 border-gray-300 hover:opacity-50"
-    >
-      <button className="mx-auto my-auto p-1" onClick={sign}>
-        <img src="https://chatgpt.solanalabs.com/favicon.ico" height={18} width={18} />
+    <div className="flex h-[30px] w-[30px] place-items-center rounded border-2 border-gray-300 hover:opacity-50">
+      <button className="mx-auto my-auto p-1" onClick={sign} disabled={disabled ?? false}>
+        <img src="https://chatgpt.solanalabs.com/favicon.ico" className="h-[18px] w-[20px]" />
       </button>
     </div>
   );

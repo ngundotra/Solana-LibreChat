@@ -7,7 +7,7 @@ const buildDefaultConversation = ({
   lastConversationSetup = {},
 }) => {
   const lastSelectedModel = JSON.parse(localStorage.getItem('lastSelectedModel')) || {};
-  const lastSelectedTools = JSON.parse(localStorage.getItem('lastSelectedTools')) || [];
+  const lastSelectedTools = []; //JSON.parse(localStorage.getItem('lastSelectedTools')) || [];
   const lastBingSettings = JSON.parse(localStorage.getItem('lastBingSettings')) || [];
 
   if (endpoint === 'azureOpenAI' || endpoint === 'openAI') {
