@@ -203,7 +203,13 @@ class FunctionsAgent extends Agent {
 
     // Make this work for multiple tools
     let spec = new OpenAPISpec(this.tools[0].openaiSpec);
-    const { openAIFunctions } = convertOpenAPISpecToOpenAIFunctions(spec);
+    const { openAIFunctions: oaif } = convertOpenAPISpecToOpenAIFunctions(spec);
+    const openAIFunctions = oaif.map((f) => {
+      return {
+        ...f,
+        name: this.tools[0].name + '__' + f.name,
+      };
+    });
 
     // const llm = new PromptLayerChatOpenAI({
     //   modelName: process.env.SIDEKICK_MODEL,
@@ -256,11 +262,13 @@ class FunctionsAgent extends Agent {
 
       if (message.function_call) {
         const functionCall = message.function_call;
-        const operationId = functionCall['name'];
+        // eslint-disable-next-line no-unused-vars
+        const [_tool, operationId] = functionCall['name'].split('__');
         const args = JSON.parse(functionCall['arguments']);
 
         // Optionally unwrap from `data` packaging {data: trueArgs}
         const data = args['data'] ?? args;
+
         // It's crucial this is the same across AI & FunctionMessage
         const toolName = `${this.tools[0].name}__${operationId}`;
 
