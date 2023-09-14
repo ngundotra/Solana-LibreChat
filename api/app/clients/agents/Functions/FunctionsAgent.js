@@ -148,7 +148,7 @@ class FunctionsAgent extends Agent {
 
     return ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(
-        `${prefix}\n\nThe current user's Solana wallet address is: {wallet_address}. \nToday's date is: ${new Date()}`,
+        `${prefix}\n\nThe current user's Solana wallet address is: {wallet_address} (case-sensitive, copy exactly as is). \nToday's date is: ${new Date()}`,
       ),
       new MessagesPlaceholder('chat_history'),
       HumanMessagePromptTemplate.fromTemplate('Query: {input}'),
@@ -215,11 +215,11 @@ class FunctionsAgent extends Agent {
     //   },
     // });
     const valuesForPrompt = Object.assign({}, newInputs);
-    valuesForPrompt['wallet_address'] = this.user.username;
+    valuesForPrompt['wallet_address'] = this.user.name;
 
     const promptValue = await this.llmChain.prompt.formatPromptValue(valuesForPrompt);
-    console.log({ promptValue });
     let formatted = promptValue.toChatMessages();
+    console.log({ formatted });
 
     let isDone = false;
     let message;
