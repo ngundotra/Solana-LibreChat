@@ -14,17 +14,56 @@ function capitalizeFirstLetterOfEachWord(str) {
     .join(' ');
 }
 
+// hellomoon: [
+//   'How many wallets used Jupiter in the last day?',
+//   'How many USDC to Sol on Jupiter this week?',
+// ],
+
 const PLUGIN_EXAMPLES = {
-  solana: [
-    'Who is the owner of toly.sol?',
-    'What is the address for USDC?',
-    'How much is my wallet worth?',
-  ],
-  tiplink: ['Make me a tiplink'],
-  hellomoon: [
-    'How many wallets used Jupiter in the last day?',
-    'How many USDC to Sol on Jupiter this week?',
-  ],
+  metaplex: {},
+  tiplink: {
+    tiplink_make_link: ['Make me a tiplink'],
+  },
+  hellomoon: {
+    query_jupiter_summary: ['Summarize Jupiter activity'],
+    query_jupiter_swap_summary: ['Give me top 10 AMMs for USDC-wSOL swap volume this week'],
+    query_jupiter_historical_summary: [
+      'How many people used Jupiter in January 2023?',
+      'How many transactions used Jupiter last month?',
+      'How much volume did Jupiter do each month last year?',
+    ],
+    query_token_users: ['How many people used USDC each day this week?'],
+    query_token_stats: [
+      'Show me stats for USDC this week',
+      'Show me stats for Rollbit token this week',
+    ],
+    search_token_name: ['What is address for Rollbit token?'],
+  },
+  solflarepfp: {
+    get_solflare_profile_pic: ['What\'s my profile pic?'],
+  },
+  solana: {
+    query_assets_by_owner: ['What NFTs do I own?'],
+    query_total_value_in_usd: [
+      'How much is my wallet worth?',
+      'How much is armani.backpack worth?',
+    ],
+    query_signatures_for_address: ['What was the last transaction my address was involved in?'],
+    query_account_info: ['What is stored in account DRqdtkRmVy4b7Xw2e44PEWk6MHhFJLnBDEhgGBkDSa4e?'],
+    query_token_accounts: ['What tokens do I own?'],
+    query_transaction: ['What happened in toly.sol\'s latest transaction?'],
+    query_balance: ['How much SOL do I have?'],
+    query_wallet_name: ['Who owns raj.sol?', 'Who owns armani.backpack?'],
+    search_token_name: ['What is the address for USDC?'],
+    create_transfer_token_tx: [
+      'Help me transfer 0.1 USDC to myself',
+      'Show me a QR code to transfer 0.1 USDC to myself',
+    ],
+    create_transfer_sol_tx: [
+      'Help me transfer 0.1 sol to myself',
+      'Show me a QR code to transfer 0.1 sol to myself',
+    ],
+  },
 };
 
 export default function PluginDetails({ navVisible, setNavVisible }) {
@@ -45,7 +84,7 @@ export default function PluginDetails({ navVisible, setNavVisible }) {
     if (tool && tool.pluginKey) {
       return PLUGIN_EXAMPLES[tool && tool.pluginKey];
     }
-    return [];
+    return {};
   }, [tool]);
 
   const clickHandler = (e) => {
@@ -67,11 +106,11 @@ export default function PluginDetails({ navVisible, setNavVisible }) {
         <div className="h-full w-[390px]">
           <div className="flex h-full min-h-0 flex-col ">
             <div className="scrollbar-trigger relative flex h-full w-full flex-1 items-start border-white/20">
-              <nav className="relative flex h-full flex-1 flex-col space-y-1 p-2">
+              <nav className="relative mb-5 flex h-full w-[85%] flex-1 flex-col space-y-1 p-2">
                 <div className="my-1 text-center text-3xl text-gray-300">
                   <span>User Guide</span>
                 </div>
-                <div className="mb-2 flex h-11 flex-row text-gray-300">
+                <div className="mb-2 flex flex h-11 flex-row text-gray-300">
                   <button
                     type="button"
                     className={cn(
@@ -82,11 +121,11 @@ export default function PluginDetails({ navVisible, setNavVisible }) {
                     <span className="sr-only">Close sidebar</span>
                     <Panel open={false} />
                   </button>
-                  <div className="mx-auto my-2 flex text-center text-xl text-white">
+                  <div className="absolute left-1/2 my-auto -translate-x-1/2 transform text-2xl text-white">
                     {tool ? tool.name : ''}
                   </div>
                   {tool && (
-                    <div className="my-auto">
+                    <div className="absolute right-0 my-auto -translate-x-1/2 transform">
                       <img src={tool ? tool.icon : ''} height={36} width={36} />
                     </div>
                   )}
@@ -97,28 +136,9 @@ export default function PluginDetails({ navVisible, setNavVisible }) {
                   </div>
                 )}
                 {moreDescriptionInfo && moreDescriptionInfo.description && (
-                  <div className="py-4 text-left text-sm text-gray-300">
+                  <div className="w-full py-4 text-left text-sm text-gray-300">
                     <span>{moreDescriptionInfo.description}</span>
                   </div>
-                )}
-                {examples && examples.length > 0 && (
-                  <>
-                    <div className="mx-auto">
-                      <span className="text-center text-xl text-white">{'Examples'}</span>
-                    </div>
-                    <ol className="list-disc pl-4 text-sm text-gray-300">
-                      {examples.map((el, idx) => (
-                        <li className="" key={idx}>
-                          <button
-                            onClick={clickHandler}
-                            className="w-full rounded-md p-3 hover:bg-gray-50 dark:hover:bg-white/5"
-                          >
-                            &quot;{el}&quot; →
-                          </button>
-                        </li>
-                      ))}
-                    </ol>
-                  </>
                 )}
                 {moreDescriptionInfo && (
                   <div className="mx-auto pt-4">
@@ -132,9 +152,28 @@ export default function PluginDetails({ navVisible, setNavVisible }) {
                       <div className="text-md text-white">
                         <span>{capitalizeFirstLetterOfEachWord(el.name.replaceAll('_', ' '))}</span>
                       </div>
-                      <div className="ml-2 text-sm">
+                      <div className="ml-2 w-[95%] text-sm">
                         <span>{el.description}</span>
                       </div>
+                      {el.name in examples && examples[el.name] && (
+                        <>
+                          {/* <div className="ml-2">
+                            <span className="text-left text-sm text-gray-300">{'Examples:'}</span>
+                          </div> */}
+                          <ol className="list-none px-4 text-left text-sm text-gray-300">
+                            {examples[el.name].map((el, idx) => (
+                              <li className="pr-4" key={idx}>
+                                <button
+                                  onClick={clickHandler}
+                                  className="w-full rounded-md py-3 text-center hover:bg-gray-50 dark:hover:bg-white/5"
+                                >
+                                  <span>&quot;{el}&quot; →</span>
+                                </button>
+                              </li>
+                            ))}
+                          </ol>
+                        </>
+                      )}
                     </div>
                   ))}
                 {!moreDescriptionInfo && (
