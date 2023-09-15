@@ -149,7 +149,10 @@ export default function Message({
           return null;
         }
       });
-    } else if (message.plugin.inputs.length === 1) {
+    } else if (
+      message.plugin.inputs.length === 1 &&
+      message.text === '<span className="result-streaming">█</span>'
+    ) {
       plugins = <Plugin key={0} plugin={message.plugin.inputs[0]} />;
     }
   }
