@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo, ReactNode } from 'react';
+import React, { useState, useCallback, useEffect, memo, ReactNode } from 'react';
 import { Spinner } from '~/components';
 import { useRecoilValue } from 'recoil';
 import CodeBlock from './Content/CodeBlock.jsx';
@@ -34,9 +34,15 @@ type PluginIconProps = LucideProps & {
 };
 
 const Plugin: React.FC<PluginProps> = ({ plugin }) => {
-  const [loading, setLoading] = useState(plugin.output ? false : true);
-  const finished = plugin.output ? true : false;
+  const [loading, setLoading] = useState(plugin.output === undefined ? true : false);
+  const finished = !loading;
   const plugins: PluginsMap = useRecoilValue(store.plugins);
+
+  useEffect(() => {
+    if (plugin.output !== undefined) {
+      setLoading(false);
+    }
+  }, [plugin.output]);
 
   const getPluginName = useCallback(
     (pluginKey: string) => {
@@ -112,7 +118,7 @@ const Plugin: React.FC<PluginProps> = ({ plugin }) => {
                   plugin={true}
                   classProp="max-h-[450px]"
                 />
-                {finished && (
+                {plugin.output !== undefined && (
                   <CodeBlock
                     lang="OUTPUT"
                     codeChildren={plugin.output ?? ''}

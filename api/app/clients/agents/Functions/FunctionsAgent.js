@@ -316,7 +316,7 @@ class FunctionsAgent extends Agent {
                   tool: `${this.tools[0].name}`,
                   method: `${operationId}`,
                   input: JSON.stringify(data),
-                  output: observation,
+                  output: observation ?? {},
                   actionType: 'update',
                 });
               } else {
