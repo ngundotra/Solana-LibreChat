@@ -14,61 +14,92 @@ function capitalizeFirstLetterOfEachWord(str) {
     .join(' ');
 }
 
-// hellomoon: [
-//   'How many wallets used Jupiter in the last day?',
-//   'How many USDC to Sol on Jupiter this week?',
-// ],
-
-const PLUGIN_EXAMPLES = {
-  metaplex: {
-    get_public_tree_addresses: ['What are some trees that I can mint cnfts to?'],
-    get_cnft_rent: [
-      'How much does it cost to create a bubblegum tree with max size and max canopy cache?',
-      'How much does it cost to create a bubblegum tree with minimum size and full canopy cache?',
-    ],
-  },
+const PLUGIN_INFO = {
   tiplink: {
-    tiplink_make_link: ['Make me a tiplink'],
+    tiplink_make_link: {
+      description:
+        'Returns TipLink URL and its corresponding wallet address. Send sol or tokens to the address to fund the TipLink. Assets can be reclaimed from the TipLink URL.',
+      examples: ['Make me a tiplink'],
+    },
   },
   hellomoon: {
-    query_jupiter_summary: ['Summarize Jupiter activity'],
-    query_jupiter_swap_summary: ['Give me top 10 AMMs for USDC-wSOL swap volume this week'],
-    query_jupiter_historical_summary: [
-      'How many people used Jupiter in January 2023?',
-      'How many transactions used Jupiter last month?',
-      'How much volume did Jupiter do each month last year?',
-    ],
-    query_token_users: ['How many people used USDC each day this week?'],
-    query_token_stats: [
-      'Show me stats for USDC this week',
-      'Show me stats for Rollbit token this week',
-    ],
-    search_token_name: ['What is the address for the Rollbit token?'],
-  },
-  solflarepfp: {
-    get_solflare_profile_pic: ['What\'s my profile pic?'],
+    query_jupiter_summary: {
+      description:
+        'Shows volume, # of users, and # of transactions on Jupiter over last 24 hours, 7 days and 30 days.',
+      examples: ['Summarize Jupiter activity'],
+    },
+    query_jupiter_swap_summary: {
+      examples: ['Give me top 10 AMMs for USDC-wSOL swap volume this week'],
+    },
+    query_jupiter_historical_summary: {
+      description:
+        'Shows volume, # of users, and # of transactions on Jupiter on a specific day, week, or month.',
+      examples: [
+        'How many people used Jupiter in January 2023?',
+        'How many transactions used Jupiter last month?',
+        'How much volume did Jupiter do each month last year?',
+      ],
+    },
+    query_token_users: {
+      description: 'Shows the number of users of a token on a particular day.',
+      examples: ['How many people used USDC each day this week?'],
+    },
+    query_token_stats: {
+      description: 'Shows statistics about a token over last few days, weeks, or months.',
+      examples: ['Show me stats for Rollbit token this week'],
+    },
+    search_token_name: { examples: ['What is the address for the Rollbit token?'] },
   },
   solana: {
-    query_assets_by_owner: ['What NFTs do I own?'],
-    query_total_value_in_usd: [
-      'How much is my wallet worth?',
-      'How much is armani.backpack worth?',
-    ],
-    query_signatures_for_address: ['What was the last transaction my address was involved in?'],
-    query_account_info: ['What is stored in account DRqdtkRmVy4b7Xw2e44PEWk6MHhFJLnBDEhgGBkDSa4e?'],
-    query_token_accounts: ['What tokens do I own?'],
-    query_transaction: ['What happened in toly.sol\'s latest transaction?'],
-    query_balance: ['How much Sol do I have?'],
-    query_wallet_name: ['Who owns raj.sol?', 'Who owns armani.backpack?'],
-    search_token_name: ['What is the address for USDC?'],
-    create_transfer_token_tx: [
-      'Help me transfer 0.1 USDC to myself',
-      'Show me a QR code to transfer 0.1 USDC to myself',
-    ],
-    create_transfer_sol_tx: [
-      'Help me transfer 0.1 sol to myself',
-      'Show me a QR code to transfer 0.1 sol to myself',
-    ],
+    query_assets_by_owner: {
+      description: 'Returns Metaplex NFTs and compressed NFTs owned by the address.',
+      examples: ['What NFTs do I own?'],
+    },
+    query_total_value_in_usd: {
+      examples: ['How much is my wallet worth?', 'How much is armani.backpack worth?'],
+    },
+    query_signatures_for_address: {
+      examples: ['What was the last transaction my address was involved in?'],
+    },
+    query_account_info: {
+      description: 'Returns information about the account data at the given address.',
+      examples: ['What is stored in account DRqdtkRmVy4b7Xw2e44PEWk6MHhFJLnBDEhgGBkDSa4e?'],
+    },
+    query_token_accounts: {
+      description: 'Shows token accounts owned by the address, does not include compressed NFTs.',
+      examples: ['What tokens do I own?'],
+    },
+    query_transaction: {
+      description: 'Returns human readable information about the given transaction.',
+      examples: ['What happened in toly.sol\'s latest transaction?'],
+    },
+    query_balance: {
+      description: 'Returns the balance of the address in Sol.',
+      examples: ['How much Sol do I have?'],
+    },
+    query_wallet_name: {
+      description:
+        'Returns address for given wallet name, or shows the wallet names owned by an address. Works with .sol, .glow, .backpack, and all ANS domains.',
+      examples: ['Who owns raj.sol?', 'Who owns armani.backpack?'],
+    },
+    search_token_name: {
+      description: 'Searches tokens by name and returns top 10 most relevant results.',
+      examples: ['What is the address for USDC?'],
+    },
+    create_transfer_token_tx: {
+      description: 'Creates a transaction to transfer tokens to another address.',
+      examples: [
+        'Help me transfer 0.1 USDC to myself',
+        'Show me a QR code to transfer 0.1 USDC to myself',
+      ],
+    },
+    create_transfer_sol_tx: {
+      description: 'Creates a transaction to transfer sol to another address.',
+      examples: [
+        'Help me transfer 0.1 sol to myself',
+        'Show me a QR code to transfer 0.1 sol to myself',
+      ],
+    },
   },
 };
 
@@ -88,7 +119,7 @@ export default function PluginDetails({ navVisible, setNavVisible }) {
 
   const examples = useMemo(() => {
     if (tool && tool.pluginKey) {
-      return PLUGIN_EXAMPLES[tool && tool.pluginKey];
+      return PLUGIN_INFO[tool && tool.pluginKey];
     }
     return {};
   }, [tool]);
@@ -159,15 +190,13 @@ export default function PluginDetails({ navVisible, setNavVisible }) {
                         <span>{capitalizeFirstLetterOfEachWord(el.name.replaceAll('_', ' '))}</span>
                       </div>
                       <div className="ml-2 w-[95%] text-sm">
-                        <span>{el.description}</span>
+                        {/* <span>{examples[el.name]['description'] ? el.description : examples[el.name]['description']}</span> */}
+                        <span>{examples[el.name]['description'] ?? el.description}</span>
                       </div>
                       {el.name in examples && examples[el.name] && (
                         <>
-                          {/* <div className="ml-2">
-                            <span className="text-left text-sm text-gray-300">{'Examples:'}</span>
-                          </div> */}
                           <ol className="list-none px-4 text-left text-sm text-gray-300">
-                            {examples[el.name].map((el, idx) => (
+                            {examples[el.name]['examples'].map((el, idx) => (
                               <li className="pr-4" key={idx}>
                                 <button
                                   onClick={clickHandler}
@@ -182,6 +211,8 @@ export default function PluginDetails({ navVisible, setNavVisible }) {
                       )}
                     </div>
                   ))}
+
+                {/* User Guide info */}
                 {!moreDescriptionInfo && (
                   <div className="text-left text-gray-300">
                     <div className="text-center text-xl">
