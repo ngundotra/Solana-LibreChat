@@ -18,24 +18,6 @@ import { useMediaQuery } from 'react-responsive';
 import PluginDetails from '~/components/PluginDetails';
 import { useWallet } from '@solana/wallet-adapter-react';
 
-function GiphyEmbed() {
-  return (
-    <div>
-      <div style={{ width: '100%', height: '0', paddingBottom: '100%', position: 'relative' }}>
-        <iframe
-          src="https://giphy.com/embed/93YOJpS4wnMfycnslY"
-          width="100%"
-          height="100%"
-          style={{ position: 'absolute' }}
-          frameBorder="0"
-          className="giphy-embed"
-          allowFullScreen
-        ></iframe>
-      </div>
-    </div>
-  );
-}
-
 export function MyNav({ setNavVisible }) {
   const className =
     'fixed left-20 right-0 top-0 z-10 flex items-center border-b border-white/20 bg-gray-800 pl-1 pt-1 text-gray-200 sm:pl-3 md:hidden';
@@ -153,7 +135,6 @@ export default function Root() {
                 <span>
                   <p>Coming soon to mobile</p>
                 </span>
-                <GiphyEmbed />
               </div>
             ) : (
               <>
