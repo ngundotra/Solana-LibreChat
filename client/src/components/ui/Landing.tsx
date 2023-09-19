@@ -1,27 +1,42 @@
 import React from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import useDocumentTitle from '~/hooks/useDocumentTitle';
 import SunIcon from '../svg/SunIcon';
 import LightningIcon from '../svg/LightningIcon';
 import CautionIcon from '../svg/CautionIcon';
 import store from '~/store';
 import { localize } from '~/localization/Translation';
-import { useGetStartupConfig } from '@librechat/data-provider';
+import { useAvailablePluginsQuery, useGetStartupConfig } from '@librechat/data-provider';
 
 export default function Landing() {
   const { data: config } = useGetStartupConfig();
   const setText = useSetRecoilState(store.text);
-  const conversation = useRecoilValue(store.conversation);
+  const [conversation, setConversation] = useRecoilState(store.conversation) || {};
   const lang = useRecoilValue(store.lang);
+  const { data: allPlugins } = useAvailablePluginsQuery();
   // @ts-ignore TODO: Fix anti-pattern - requires refactoring conversation store
   // const { title = localize(lang, 'com_ui_new_chat') } = conversation || {};
 
   useDocumentTitle('Sidekick');
 
-  const clickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const setTools = (newValue) => {
+    let update = {};
+    if (newValue) {
+      (update as any).tools = (allPlugins ?? []).filter((el) => el.pluginKey === newValue);
+      console.log('update', (update as any).tools);
+    }
+    localStorage.setItem('lastSelectedTools', JSON.stringify((update as any).tools));
+    setConversation((prevState) => ({
+      ...(prevState as any),
+      ...update,
+    }));
+  };
+
+  const makeClickHandler = (pluginKey: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const { innerText } = e.target as HTMLButtonElement;
     const quote = innerText.split('"')[1].trim();
+    setTools(pluginKey);
     setText(quote);
   };
 
@@ -43,22 +58,40 @@ export default function Landing() {
             </h2>
             <ul className="m-auto flex w-full flex-col gap-3.5 sm:max-w-md">
               <button
-                onClick={clickHandler}
-                className="w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
+                onClick={makeClickHandler('hellomoon')}
+                className="flex w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
               >
-                &quot;{localize(lang, 'com_ui_example_solana_one')}&quot; →
+                <img
+                  src="https://www.hellomoon.io/favicon.ico"
+                  width={'20px'}
+                  alt="HelloMoon"
+                  className="mr-2"
+                />
+                &quot;{'Summarize Jupiter activity this week'}&quot; →
               </button>
               <button
-                onClick={clickHandler}
-                className="w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
+                onClick={makeClickHandler('solana')}
+                className="flex w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
               >
-                &quot;{localize(lang, 'com_ui_example_solana_two')}&quot; →
+                <img
+                  src="https://chatgpt.solanalabs.com/logo.ico"
+                  width={'20px'}
+                  alt="Solana"
+                  className="mr-2"
+                />
+                &quot;{'Make me a QR code to transfer 0.1 Sol to myself'}&quot; →
               </button>
               <button
-                onClick={clickHandler}
-                className="w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
+                onClick={makeClickHandler('tiplink')}
+                className="flex-between flex w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
               >
-                &quot;{localize(lang, 'com_ui_example_solana_three')}&quot; →
+                <img
+                  src="https://avatars.slack-edge.com/2022-09-15/4074408076071_7930bab6f543133ba16f_34.png"
+                  width={'20px'}
+                  alt="Tiplink"
+                  className="mr-2"
+                />
+                &quot;{'Make me a Tiplink'}&quot; →
               </button>
             </ul>
           </div>
