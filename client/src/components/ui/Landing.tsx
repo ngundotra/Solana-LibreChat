@@ -2,14 +2,14 @@ import React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import useDocumentTitle from '~/hooks/useDocumentTitle';
 import SunIcon from '../svg/SunIcon';
-import LightningIcon from '../svg/LightningIcon';
-import CautionIcon from '../svg/CautionIcon';
+// import LightningIcon from '../svg/LightningIcon';
+// import CautionIcon from '../svg/CautionIcon';
 import store from '~/store';
 import { localize } from '~/localization/Translation';
 import { useAvailablePluginsQuery, useGetStartupConfig } from '@librechat/data-provider';
 
 export default function Landing() {
-  const { data: config } = useGetStartupConfig();
+  // const { data: config } = useGetStartupConfig();
   const setText = useSetRecoilState(store.text);
   const [conversation, setConversation] = useRecoilState(store.conversation) || {};
   const lang = useRecoilValue(store.lang);
@@ -67,7 +67,8 @@ export default function Landing() {
                   alt="HelloMoon"
                   className="mr-2"
                 />
-                &quot;{'Summarize Jupiter activity this week'}&quot; →
+                <div className="flex-1">&quot;{'Summarize Jupiter activity this week'}&quot;</div>
+                <div className="">→</div>
               </button>
               <button
                 onClick={makeClickHandler('solana')}
@@ -79,7 +80,8 @@ export default function Landing() {
                   alt="Solana"
                   className="mr-2"
                 />
-                &quot;{'Make me a QR code to transfer 0.1 Sol to myself'}&quot; →
+                <div className="flex-1">&quot;{'QR code to transfer 0.1 Sol to myself'}&quot;</div>
+                <div className="">→</div>
               </button>
               <button
                 onClick={makeClickHandler('tiplink')}
@@ -91,9 +93,18 @@ export default function Landing() {
                   alt="Tiplink"
                   className="mr-2"
                 />
-                &quot;{'Make me a Tiplink'}&quot; →
+                <div className="flex-1">&quot;{'Make me a Tiplink'}&quot;</div>
+                <div className="">→</div>
               </button>
             </ul>
+            <div className="flex flex-col place-items-center text-gray-400">
+              <div className="text-md">Disclaimer:</div>
+              <div className="max-w-lg text-center text-sm">
+                {
+                  'This product uses artificial intelligence ("AI"), which may produce inaccurate information. You are responsible for transactions you authorize, so please confirm accuracy of instructions prior to authorizing any transaction.'
+                }
+              </div>
+            </div>
           </div>
           {/* <div className="mb-8 flex flex-1 flex-col gap-3.5 md:mb-auto">
             <h2 className="m-auto flex items-center gap-3 text-lg font-normal md:flex-col md:gap-2">
