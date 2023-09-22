@@ -81,7 +81,6 @@ export const login = (payload: t.TLoginUser) => {
 };
 
 export const loginWallet = (payload: t.TLoginWalletUser) => {
-  console.log({ payload });
   return request.post(endpoints.loginWallet(), payload);
 };
 
