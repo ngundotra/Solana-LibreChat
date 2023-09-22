@@ -5,7 +5,7 @@ import { Panel } from '~/components';
 import { cn } from '~/utils/';
 import store from '~/store';
 import { usePluginDetailsQuery } from '@librechat/data-provider';
-import SolanaPay from '../Messages/SolanaPay';
+// import SolanaPay from '../Messages/SolanaPay';
 
 function capitalizeFirstLetterOfEachWord(str) {
   return str
@@ -251,8 +251,7 @@ export default function PluginDetails({ navVisible, setNavVisible }) {
                           If the AI detects it can use your selected plugin in the conversation, it
                           will automatically use the plugin to assist you
                         </li>
-                        <li className="pb-1">
-                          {/* eslint-disable-next-line max-len */}
+                        {/* <li className="pb-1">
                           If the AI creates a transaction for you, a button on the left of the
                           message may be shown. You can click to simulate & then execute the
                           transaction with your wallet.
@@ -260,7 +259,7 @@ export default function PluginDetails({ navVisible, setNavVisible }) {
                             Example:
                             <SolanaPay disabled={true} className="px-3" />
                           </div>
-                        </li>
+                        </li> */}
                       </ol>
                     </div>
                   </div>

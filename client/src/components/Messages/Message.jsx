@@ -14,19 +14,19 @@ import { useGetConversationByIdQuery } from '@librechat/data-provider';
 import { cn } from '~/utils/';
 import store from '~/store';
 import getError from '~/utils/getError';
-import SolanaPay from './SolanaPay';
+// import SolanaPay from './SolanaPay';
 
-const findSolanaPayLinks = (content) => {
-  // Define the regular expression to search for the specific links
-  // With lookahead to close the expression based on markdown syntax
-  // Need the \/+ in case backend returns a double slash between https://domain//api/<etc>
-  const regex =
-    /https?:\/\/[a-zA-Z0-9-.]+\/+api\/handlers\/solana-pay\/qr\/[a-zA-Z0-9=&?%-.]+(?=[)"',;])/g;
+// const findSolanaPayLinks = (content) => {
+//   // Define the regular expression to search for the specific links
+//   // With lookahead to close the expression based on markdown syntax
+//   // Need the \/+ in case backend returns a double slash between https://domain//api/<etc>
+//   const regex =
+//     /https?:\/\/[a-zA-Z0-9-.]+\/+api\/handlers\/solana-pay\/qr\/[a-zA-Z0-9=&?%-.]+(?=[)"',;])/g;
 
-  // Execute the search
-  const foundLinks = content.match(regex);
-  return foundLinks;
-};
+//   // Execute the search
+//   const foundLinks = content.match(regex);
+//   return foundLinks;
+// };
 
 export default function Message({
   conversation,
@@ -157,7 +157,7 @@ export default function Message({
     }
   }
 
-  let links = message && message.text && findSolanaPayLinks(message.text);
+  // let links = message && message.text && findSolanaPayLinks(message.text);
   // console.log({ text: message.text, links });
 
   return (
@@ -177,9 +177,9 @@ export default function Message({
                 setSiblingIdx={setSiblingIdx}
               />
             </div>
-            <div className="mx-auto py-2">
+            {/* <div className="mx-auto py-2">
               {links && links.map((link, idx) => <SolanaPay link={link} key={idx} />)}
-            </div>
+            </div> */}
           </div>
           <div className="relative flex w-[calc(100%-50px)] flex-col gap-1  md:gap-3 lg:w-[calc(100%-115px)]">
             {searchResult && (
