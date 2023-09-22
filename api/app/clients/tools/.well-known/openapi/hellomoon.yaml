@@ -4,7 +4,7 @@ info:
   description: An API for querying information about protocols built on Solana
   version: 1.0.0
 servers:
-  - url: https://chatgpt-plugin-git-hello-moon-plugin-solana-labs.vercel.app/api/helloMoon
+  - url: https://chatgpt.solanalabs.com/api/helloMoon
 paths:
   /jupiter/summary:
     post:

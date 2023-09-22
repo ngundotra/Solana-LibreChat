@@ -172,6 +172,7 @@ paths:
               properties:
                 walletName:
                   type: string
+                  description: Base58 address or wallet name to lookup
       responses:
         '200':
           description: Successful Response

@@ -223,6 +223,7 @@ function convertOpenAPISpecToOpenAIFunctions(spec) {
         const requestBodySchemas = {};
         for (const [mediaType, mediaTypeObject] of Object.entries(requestBody.content)) {
           if (mediaTypeObject.schema !== undefined) {
+            console.log(path, mediaTypeObject.schema);
             const schema = spec.getSchema(mediaTypeObject.schema);
             requestBodySchemas[mediaType] = convertOpenAPISchemaToJSONSchema(schema, spec);
           }
