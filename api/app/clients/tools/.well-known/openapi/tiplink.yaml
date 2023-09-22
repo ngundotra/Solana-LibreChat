@@ -1,0 +1,35 @@
+openapi: 3.0.2
+info:
+  title: Tiplink Plugin API
+  description: An API for creating TipLinks, which store digital assets on Solana, and allow easy claiming through their URLs.
+  version: 1.0.0
+servers:
+  - url: https://chatgpt.solanalabs.com/api/tiplink
+paths:
+  /makeLink:
+    post:
+      summary:
+        This returns a TipLink URL and address. The URL can be used to claim all items owned by that `address`. Users can send tokens, NFTs, and compressed NFTs
+        to this `address` to be claimed by the owner of the URL.
+      operationId: tiplink_make_link
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                  address:
+                    type: string
+        '500':
+          description: Validation Error
+      security:
+        - HTTPBearer: []
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -9,7 +9,6 @@ import { router } from './routes';
 
 const App = () => {
   const { setError } = useApiErrorBoundary();
-
   const queryClient = new QueryClient({
     queryCache: new QueryCache({
       onError: (error) => {

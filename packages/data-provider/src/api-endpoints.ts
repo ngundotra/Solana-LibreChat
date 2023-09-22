@@ -58,6 +58,10 @@ export const login = () => {
   return '/api/auth/login';
 };
 
+export const loginWallet = () => {
+  return '/api/auth/siwsVerify';
+};
+
 export const logout = () => {
   return '/api/auth/logout';
 };
@@ -88,6 +92,10 @@ export const resetPassword = () => {
 
 export const plugins = () => {
   return '/api/plugins';
+};
+
+export const pluginDetails = () => {
+  return '/api/plugins/details';
 };
 
 export const config = () => {

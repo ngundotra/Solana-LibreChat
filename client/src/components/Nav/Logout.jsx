@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import LogOutIcon from '../svg/LogOutIcon';
 import { useAuthContext } from '~/hooks/AuthContext';
+import { shortenName } from '~/utils';
 
 const Logout = forwardRef(() => {
   const { user, logout } = useAuthContext();
@@ -16,7 +17,7 @@ const Logout = forwardRef(() => {
       onClick={handleLogout}
     >
       <LogOutIcon />
-      {user?.username || 'USER'}
+      {user?.username ? shortenName(user?.username) : 'USER'}
       <small>Log out</small>
     </button>
   );

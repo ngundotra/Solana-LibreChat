@@ -4,6 +4,7 @@ const router = express.Router();
 router.get('/', async function (req, res) {
   try {
     const appTitle = process.env.APP_TITLE || 'LibreChat';
+    const heliusRpcUrl = process.env.HELIUS_RPC_URL || '';
     const googleLoginEnabled = !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET;
     const openidLoginEnabled =
       !!process.env.OPENID_CLIENT_ID &&
@@ -30,6 +31,7 @@ router.get('/', async function (req, res) {
       serverDomain,
       registrationEnabled,
       socialLoginEnabled,
+      heliusRpcUrl,
     });
   } catch (err) {
     console.error(err);

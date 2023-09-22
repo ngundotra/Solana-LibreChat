@@ -7,7 +7,7 @@ const endpointsConfig = atom({
     openAI: null,
     bingAI: null,
     chatGPTBrowser: null,
-    gptPlugins: null,
+    gptPlugins: {},
     google: null,
     anthropic: null,
   },
@@ -34,23 +34,25 @@ const endpointsFilter = selector({
   },
 });
 
+/**
+ * Config available conversation types
+ */
 const availableEndpoints = selector({
   key: 'availableEndpoints',
   get: ({ get }) => {
     const endpoints = [
-      'azureOpenAI',
-      'openAI',
-      'chatGPTBrowser',
+      // 'azureOpenAI',
+      // 'openAI',
+      // 'chatGPTBrowser',
       'gptPlugins',
-      'bingAI',
-      'google',
-      'anthropic',
+      // 'bingAI',
+      // 'google',
+      // 'anthropic',
     ];
     const f = get(endpointsFilter);
     return endpoints.filter((endpoint) => f[endpoint]);
   },
 });
-// const modelAvailable
 
 export default {
   plugins,

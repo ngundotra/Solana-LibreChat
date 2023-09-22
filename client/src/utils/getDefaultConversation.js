@@ -1,3 +1,5 @@
+import { DEFAULT_MODEL } from '~/constants';
+
 const buildDefaultConversation = ({
   conversation,
   endpoint,
@@ -5,18 +7,14 @@ const buildDefaultConversation = ({
   lastConversationSetup = {},
 }) => {
   const lastSelectedModel = JSON.parse(localStorage.getItem('lastSelectedModel')) || {};
-  const lastSelectedTools = JSON.parse(localStorage.getItem('lastSelectedTools')) || [];
+  const lastSelectedTools = []; //JSON.parse(localStorage.getItem('lastSelectedTools')) || [];
   const lastBingSettings = JSON.parse(localStorage.getItem('lastBingSettings')) || [];
 
   if (endpoint === 'azureOpenAI' || endpoint === 'openAI') {
     conversation = {
       ...conversation,
       endpoint,
-      model:
-        lastConversationSetup?.model ??
-        lastSelectedModel[endpoint] ??
-        endpointsConfig[endpoint]?.availableModels?.[0] ??
-        'gpt-3.5-turbo',
+      model: DEFAULT_MODEL,
       chatGptLabel: lastConversationSetup?.chatGptLabel ?? null,
       promptPrefix: lastConversationSetup?.promptPrefix ?? null,
       temperature: lastConversationSetup?.temperature ?? 1,
@@ -84,10 +82,11 @@ const buildDefaultConversation = ({
         'text-davinci-002-render-sha',
     };
   } else if (endpoint === 'gptPlugins') {
-    const agentOptions = lastConversationSetup?.agentOptions ?? {
+    // lastConversationSetup?.agentOptions ??
+    const agentOptions = {
       agent: 'functions',
       skipCompletion: true,
-      model: 'gpt-3.5-turbo',
+      model: DEFAULT_MODEL,
       temperature: 0,
       // top_p: 1,
       // presence_penalty: 0,
@@ -97,11 +96,7 @@ const buildDefaultConversation = ({
       ...conversation,
       endpoint,
       tools: lastSelectedTools ?? lastConversationSetup?.tools ?? [],
-      model:
-        lastConversationSetup?.model ??
-        lastSelectedModel[endpoint] ??
-        endpointsConfig[endpoint]?.availableModels?.[0] ??
-        'gpt-3.5-turbo',
+      model: DEFAULT_MODEL,
       chatGptLabel: lastConversationSetup?.chatGptLabel ?? null,
       promptPrefix: lastConversationSetup?.promptPrefix ?? null,
       temperature: lastConversationSetup?.temperature ?? 0.8,
@@ -127,7 +122,8 @@ const buildDefaultConversation = ({
 };
 
 const getDefaultConversation = ({ conversation, endpointsConfig, preset }) => {
-  const { endpoint: targetEndpoint } = preset || {};
+  // const { endpoint: targetEndpoint } = preset || {};
+  const targetEndpoint = 'gptPlugins';
 
   if (targetEndpoint) {
     // try to use preset
@@ -141,7 +137,6 @@ const getDefaultConversation = ({ conversation, endpointsConfig, preset }) => {
       });
       return conversation;
     } else {
-      console.log(endpoint);
       console.warn(`Illegal target endpoint ${targetEndpoint} ${endpointsConfig}`);
     }
   }

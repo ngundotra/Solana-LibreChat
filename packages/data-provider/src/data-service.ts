@@ -80,6 +80,10 @@ export const login = (payload: t.TLoginUser) => {
   return request.post(endpoints.login(), payload);
 };
 
+export const loginWallet = (payload: t.TLoginWalletUser) => {
+  return request.post(endpoints.loginWallet(), payload);
+};
+
 export const logout = () => {
   return request.post(endpoints.logout());
 };
@@ -108,6 +112,10 @@ export const resetPassword = (payload: t.TResetPassword) => {
 
 export const getAvailablePlugins = (): Promise<t.TPlugin[]> => {
   return request.get(endpoints.plugins());
+};
+
+export const getPluginDetails = (payload: t.TGetPluginDetails): Promise<t.TPluginDetails[]> => {
+  return request.get(endpoints.pluginDetails() + '?pluginKey=' + payload.pluginKey);
 };
 
 export const updateUserPlugins = (payload: t.TUpdateUserPlugins) => {

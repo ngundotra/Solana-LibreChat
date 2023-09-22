@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Conversation } = require('../../models/Conversation');
 const { getMessages } = require('../../models/');
+const Message = require('../../models/Message');
 
 const migrateToStrictFollowParentMessageIdChain = async () => {
   try {
@@ -78,10 +79,10 @@ const migrateToSupportBetterCustomization = async () => {
 
       if (originalModel === 'chatgpt') {
         convo.endpoint = 'openAI';
-        convo.model = 'gpt-3.5-turbo';
+        convo.model = 'gpt-4';
       } else if (originalModel === 'chatgptCustom') {
         convo.endpoint = 'openAI';
-        convo.model = 'gpt-3.5-turbo';
+        convo.model = 'gpt-4';
       } else if (originalModel === 'bingai') {
         convo.endpoint = 'bingAI';
         convo.model = null;
@@ -96,7 +97,7 @@ const migrateToSupportBetterCustomization = async () => {
         convo.jailbreak = true;
       } else {
         convo.endpoint = 'openAI';
-        convo.model = 'gpt-3.5-turbo';
+        convo.model = 'gpt-4';
       }
 
       promises.push(convo.save());
@@ -109,10 +110,39 @@ const migrateToSupportBetterCustomization = async () => {
   }
 };
 
+const migrateToRemoveOldConvos = async () => {
+  try {
+    // Get the current date and time
+    const currentDate = new Date();
+
+    // Subtract 30 days from the current date
+    const thirtyDaysAgo = new Date(currentDate - 30 * 24 * 60 * 60 * 1000);
+
+    const conversations = await Conversation.find({ createdAt: { $lt: thirtyDaysAgo } });
+    let deletedMessages = 0;
+    for (let convo of conversations) {
+      const r = await Message.Message.deleteMany({ conversationId: convo.conversationId });
+      deletedMessages += r.deletedCount;
+      await Conversation.deleteOne({ conversationId: convo.conversationId });
+    }
+
+    const result = await Message.Message.deleteMany({ createdAt: { $lt: thirtyDaysAgo } });
+    deletedMessages += result.deletedCount;
+
+    console.log(
+      `[Migrate] Deleted ${conversations.length} conversations and ${deletedMessages} old messages.`,
+    );
+  } catch (error) {
+    console.log(error);
+    return { message: '[Migrate] Error deleting 30 day old conversations' };
+  }
+};
+
 async function migrateDb() {
   let ret = [];
   ret[0] = await migrateToStrictFollowParentMessageIdChain();
   ret[1] = await migrateToSupportBetterCustomization();
+  ret[2] = await migrateToRemoveOldConvos();
 
   const isMigrated = !!ret.find((element) => !element?.noNeed);
 

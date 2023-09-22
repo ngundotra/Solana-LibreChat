@@ -44,3 +44,10 @@ export const alternateName = {
   google: 'PaLM',
   anthropic: 'Anthropic',
 };
+
+export function shortenName(name) {
+  const diff = 5;
+  const first = name.slice(0, diff);
+  const last = name.slice(name.length - diff, name.length);
+  return `${first}...${last}`;
+}

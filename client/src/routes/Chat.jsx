@@ -34,7 +34,7 @@ export default function Chat() {
   useEffect(() => {
     let timeout = setTimeout(() => {
       if (!isAuthenticated) {
-        navigate('/login', { replace: true });
+        navigate('/chat/new', { replace: true });
       }
     }, 300);
 
@@ -96,7 +96,8 @@ export default function Chat() {
         setShouldNavigate(true);
       }
     }
-    document.title = conversation?.title || config?.appTitle || 'Chat';
+    // document.title = conversation?.title || config?.appTitle || 'Chat';
+    document.title = config?.appTitle;
   }, [conversation, conversationId, config]);
 
   useEffect(() => {
@@ -115,9 +116,9 @@ export default function Chat() {
     }
   }, [messagesQuery.data, messagesQuery.isError, setMessages]);
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  // if (!isAuthenticated) {
+  //   return null;
+  // }
 
   // if not a conversation
   if (conversation?.conversationId === 'search') {
@@ -136,7 +137,7 @@ export default function Chat() {
     return (
       <>
         <Messages />
-        <TextChat />
+        <TextChat disabled={!isAuthenticated} />
       </>
     );
   }
@@ -144,7 +145,7 @@ export default function Chat() {
   return (
     <>
       {conversationId === 'new' && !messagesTree?.length ? <Landing /> : <Messages />}
-      <TextChat />
+      <TextChat disabled={!isAuthenticated} />
     </>
   );
 }

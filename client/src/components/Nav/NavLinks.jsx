@@ -9,16 +9,21 @@ import ExportModel from './ExportConversation/ExportModel';
 import ClearConvos from './ClearConvos';
 import Logout from './Logout';
 import { useAuthContext } from '~/hooks/AuthContext';
-import { cn } from '~/utils/';
+import { cn, shortenName } from '~/utils/';
 
 import store from '~/store';
-import { LinkIcon, DotsIcon, GearIcon, TrashIcon } from '~/components';
+import { LinkIcon, DotsIcon, GearIcon, TrashIcon, Clipboard } from '~/components';
+import { WalletMultiButton } from '@librechat/wallet-adapter-react-ui';
+
+// Default styles that can be overridden by your app
+import '@solana/wallet-adapter-react-ui/styles.css';
 
 export default function NavLinks({ clearSearch, isSearchEnabled }) {
   const [showExports, setShowExports] = useState(false);
   const [showClearConvos, setShowClearConvos] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const { user } = useAuthContext();
+  // const { connected, signMessage } = useWallet();
 
   const conversation = useRecoilValue(store.conversation) || {};
 
@@ -33,6 +38,30 @@ export default function NavLinks({ clearSearch, isSearchEnabled }) {
     }
   };
 
+  // useEffect(() => {
+  //   async function signStuff() {
+  //     if (connected) {
+  //       let createResponse;
+  //       try {
+  //         createResponse = await fetch('/api/auth/siwsCreate', {
+  //           method: 'POST',
+  //         });
+  //       } catch (e) {
+  //         console.error(e);
+  //       }
+  //       const input = await createResponse.json();
+  //       console.log({ input });
+  //       let output = await signMessage(input);
+  //       console.log({ output });
+  //     }
+  //   };
+  //   signStuff();
+  // }, [connected]);
+
+  if (!user) {
+    return <WalletMultiButton />;
+  }
+
   return (
     <>
       <Menu as="div" className="group relative">
@@ -44,24 +73,26 @@ export default function NavLinks({ clearSearch, isSearchEnabled }) {
                 open ? 'bg-gray-800' : '',
               )}
             >
-              <div className="-ml-0.5 h-5 w-5 flex-shrink-0">
-                <div className="relative flex">
-                  <img
-                    className="rounded-sm"
-                    src={
-                      user?.avatar ||
-                      `https://api.dicebear.com/6.x/initials/svg?seed=${
-                        user?.name || 'User'
-                      }&fontFamily=Verdana&fontSize=36`
-                    }
-                    alt=""
-                  />
+              <>
+                <div className="-ml-0.5 h-5 w-5 flex-shrink-0">
+                  <div className="relative flex">
+                    <img
+                      className="rounded-sm"
+                      src={
+                        user?.avatar ||
+                        `https://api.dicebear.com/6.x/initials/svg?seed=${
+                          user?.name || 'User'
+                        }&fontFamily=Verdana&fontSize=36`
+                      }
+                      alt=""
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="grow overflow-hidden text-ellipsis whitespace-nowrap text-left text-white">
-                {user?.name || 'USER'}
-              </div>
-              <DotsIcon />
+                <div className="grow overflow-hidden text-ellipsis whitespace-nowrap text-left text-white">
+                  {shortenName(user?.name)}
+                </div>
+                <DotsIcon />
+              </>
             </Menu.Button>
 
             <Transition
@@ -99,12 +130,22 @@ export default function NavLinks({ clearSearch, isSearchEnabled }) {
                     clickHandler={() => setShowClearConvos(true)}
                   />
                 </Menu.Item>
-                <Menu.Item as="div">
+                {/* <Menu.Item as="div">
                   <NavLink
                     className="flex w-full cursor-pointer items-center gap-3 rounded-none px-3 py-3 text-sm text-white transition-colors duration-200 hover:bg-gray-700"
                     svg={() => <LinkIcon />}
                     text="Help & FAQ"
                     clickHandler={() => window.open('https://docs.librechat.ai/', '_blank')}
+                  />
+                </Menu.Item> */}
+                <Menu.Item as="div">
+                  <NavLink
+                    className="flex w-full cursor-pointer items-center gap-3 rounded-none px-3 py-3 text-sm text-white transition-colors duration-200 hover:bg-gray-700"
+                    svg={() => <LinkIcon />}
+                    text="Feedback / Report Bug"
+                    clickHandler={() =>
+                      window.open('https://forms.gle/3R8dcdCVVP4bR1wC7', '_blank')
+                    }
                   />
                 </Menu.Item>
                 <Menu.Item as="div">
@@ -117,6 +158,16 @@ export default function NavLinks({ clearSearch, isSearchEnabled }) {
                 </Menu.Item>
                 <div className="my-1.5 h-px bg-white/20" role="none" />
                 <Menu.Item as="div">
+                  <Menu.Item as="div">
+                    <NavLink
+                      className="flex w-full cursor-pointer items-center gap-3 rounded-none px-3 py-3 text-sm text-white transition-colors duration-200 hover:bg-gray-700"
+                      svg={() => <Clipboard />}
+                      text="Copy Wallet Address"
+                      clickHandler={() => {
+                        navigator.clipboard.writeText(user?.name);
+                      }}
+                    />
+                  </Menu.Item>
                   <Logout />
                 </Menu.Item>
               </Menu.Items>

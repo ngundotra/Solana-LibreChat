@@ -20,6 +20,7 @@ module.exports = {
     'e2e/playwright-report/**/*',
     'packages/data-provider/types/**/*',
     'packages/data-provider/dist/**/*',
+    'packages/react-ui/**/*',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -44,8 +45,8 @@ module.exports = {
       },
     ],
     'linebreak-style': 0,
-    'curly': ['error', 'all'],
-    'semi': ['error', 'always'],
+    curly: ['error', 'all'],
+    semi: ['error', 'always'],
     'no-trailing-spaces': 'error',
     'object-curly-spacing': ['error', 'always'],
     'no-multiple-empty-lines': ['error', { max: 1 }],
@@ -123,6 +124,18 @@ module.exports = {
         },
       ],
     },
+    // {
+    //   files: './packages/react-ui/**/*.ts',
+    //   overrides: [
+    //     {
+    //       files: '**/*.ts',
+    //       parser: '@typescript-eslint/parser',
+    //       parserOptions: {
+    //         project: './packages/react-ui/tsconfig.json',
+    //       },
+    //     },
+    //   ],
+    // },
   ],
   settings: {
     react: {

@@ -12,10 +12,12 @@ import {
   TLoginResponse,
   setTokenHeader,
   useLoginUserMutation,
+  useLoginWalletUserMutation,
   useLogoutUserMutation,
   useGetUserQuery,
   useRefreshTokenMutation,
   TLoginUser,
+  TLoginWalletUser,
 } from '@librechat/data-provider';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,6 +27,7 @@ export type TAuthContext = {
   isAuthenticated: boolean;
   error: string | undefined;
   login: (data: TLoginUser) => void;
+  loginWallet: (data: TLoginWalletUser) => void;
   logout: () => void;
 };
 
@@ -57,6 +60,7 @@ const AuthContextProvider = ({
   const navigate = useNavigate();
 
   const loginUser = useLoginUserMutation();
+  const loginWalletUser = useLoginWalletUserMutation();
   const logoutUser = useLogoutUserMutation();
   const userQuery = useGetUserQuery({ enabled: !!token });
   const refreshToken = useRefreshTokenMutation();
@@ -102,7 +106,20 @@ const AuthContextProvider = ({
       },
       onError: (error) => {
         doSetError((error as Error).message);
-        navigate('/login', { replace: true });
+        navigate('/chat/new', { replace: true });
+      },
+    });
+  };
+
+  const loginWallet = (data: TLoginWalletUser) => {
+    loginWalletUser.mutate(data, {
+      onSuccess: (data: TLoginResponse) => {
+        const { user, token } = data;
+        setUserContext({ token, isAuthenticated: true, user, redirect: '/chat/new' });
+      },
+      onError: (error) => {
+        doSetError((error as Error).message);
+        navigate('/chat/new', { replace: true });
       },
     });
   };
@@ -119,7 +136,7 @@ const AuthContextProvider = ({
           token: undefined,
           isAuthenticated: false,
           user: undefined,
-          redirect: '/login',
+          redirect: '/chat/new',
         });
       },
       onError: (error) => {
@@ -133,7 +150,7 @@ const AuthContextProvider = ({
       setUser(userQuery.data);
     } else if (userQuery.isError) {
       doSetError((userQuery?.error as Error).message);
-      navigate('/login', { replace: true });
+      navigate('/chat/new', { replace: true });
     }
     if (error && isAuthenticated) {
       doSetError(undefined);
@@ -143,7 +160,7 @@ const AuthContextProvider = ({
       if (tokenFromCookie) {
         setUserContext({ token: tokenFromCookie, isAuthenticated: true, user: userQuery.data });
       } else {
-        navigate('/login', { replace: true });
+        navigate('/chat/new', { replace: true });
       }
     }
   }, [
@@ -183,6 +200,7 @@ const AuthContextProvider = ({
       isAuthenticated,
       error,
       login,
+      loginWallet,
       logout,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

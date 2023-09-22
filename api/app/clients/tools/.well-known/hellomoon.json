@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "hellomoon",
+  "name_for_human": "Hello Moon",
+  "description_for_model": "This extension is for querying high level information about Defi, NFT, and program usage on the Solana blockchain. Use it whenever a user asks about high level data questions about Solana.",
+  "description_for_human": "Explore DeFi protocol data on Solana.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "hellomoon.yaml",
+    "has_user_authentication": false
+  },
+  "logo_url": "https://www.hellomoon.io/favicon.ico",
+  "contact_email": "noah.gundotra@solana.com",
+  "legal_info_url": "https://solanapay.com/tos"
+}

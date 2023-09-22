@@ -1,27 +1,42 @@
 import React from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import useDocumentTitle from '~/hooks/useDocumentTitle';
 import SunIcon from '../svg/SunIcon';
-import LightningIcon from '../svg/LightningIcon';
-import CautionIcon from '../svg/CautionIcon';
+// import LightningIcon from '../svg/LightningIcon';
+// import CautionIcon from '../svg/CautionIcon';
 import store from '~/store';
 import { localize } from '~/localization/Translation';
-import { useGetStartupConfig } from '@librechat/data-provider';
+import { useAvailablePluginsQuery, useGetStartupConfig } from '@librechat/data-provider';
 
 export default function Landing() {
-  const { data: config } = useGetStartupConfig();
+  // const { data: config } = useGetStartupConfig();
   const setText = useSetRecoilState(store.text);
-  const conversation = useRecoilValue(store.conversation);
+  const [conversation, setConversation] = useRecoilState(store.conversation) || {};
   const lang = useRecoilValue(store.lang);
+  const { data: allPlugins } = useAvailablePluginsQuery();
   // @ts-ignore TODO: Fix anti-pattern - requires refactoring conversation store
-  const { title = localize(lang, 'com_ui_new_chat') } = conversation || {};
+  // const { title = localize(lang, 'com_ui_new_chat') } = conversation || {};
 
-  useDocumentTitle(title);
+  useDocumentTitle('Sidekick');
 
-  const clickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const setTools = (newValue) => {
+    let update = {};
+    if (newValue) {
+      (update as any).tools = (allPlugins ?? []).filter((el) => el.pluginKey === newValue);
+      console.log('update', (update as any).tools);
+    }
+    localStorage.setItem('lastSelectedTools', JSON.stringify((update as any).tools));
+    setConversation((prevState) => ({
+      ...(prevState as any),
+      ...update,
+    }));
+  };
+
+  const makeClickHandler = (pluginKey: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const { innerText } = e.target as HTMLButtonElement;
     const quote = innerText.split('"')[1].trim();
+    setTools(pluginKey);
     setText(quote);
   };
 
@@ -32,7 +47,8 @@ export default function Landing() {
           id="landing-title"
           className="mb-10 ml-auto mr-auto mt-6 flex items-center justify-center gap-2 text-center text-4xl font-semibold sm:mb-16 md:mt-[10vh]"
         >
-          {config?.appTitle || 'LibreChat'}
+          {/* {config?.appTitle || 'LibreChat'} */}
+          <img src="/assets/sidekick-large-bubble.png" width={'500px'} alt="Solana Sidekick" />
         </h1>
         <div className="items-start gap-3.5 text-center md:flex">
           <div className="mb-8 flex flex-1 flex-col gap-3.5 md:mb-auto">
@@ -42,26 +58,55 @@ export default function Landing() {
             </h2>
             <ul className="m-auto flex w-full flex-col gap-3.5 sm:max-w-md">
               <button
-                onClick={clickHandler}
-                className="w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
+                onClick={makeClickHandler('hellomoon')}
+                className="flex w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
               >
-                &quot;{localize(lang, 'com_ui_example_quantum_computing')}&quot; →
+                <img
+                  src="https://www.hellomoon.io/favicon.ico"
+                  width={'20px'}
+                  alt="HelloMoon"
+                  className="mr-2"
+                />
+                <div className="flex-1">&quot;{'Summarize Jupiter activity this week'}&quot;</div>
+                <div className="">→</div>
               </button>
               <button
-                onClick={clickHandler}
-                className="w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
+                onClick={makeClickHandler('solana')}
+                className="flex w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
               >
-                &quot;{localize(lang, 'com_ui_example_10_year_old_b_day')}&quot; →
+                <img
+                  src="https://chatgpt.solanalabs.com/logo.ico"
+                  width={'20px'}
+                  alt="Solana"
+                  className="mr-2"
+                />
+                <div className="flex-1">&quot;{'QR code to transfer 0.1 Sol to myself'}&quot;</div>
+                <div className="">→</div>
               </button>
               <button
-                onClick={clickHandler}
-                className="w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
+                onClick={makeClickHandler('tiplink')}
+                className="flex-between flex w-full rounded-md bg-gray-50 p-3 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-gray-900"
               >
-                &quot;{localize(lang, 'com_ui_example_http_in_js')}&quot; →
+                <img
+                  src="https://avatars.slack-edge.com/2022-09-15/4074408076071_7930bab6f543133ba16f_34.png"
+                  width={'20px'}
+                  alt="Tiplink"
+                  className="mr-2"
+                />
+                <div className="flex-1">&quot;{'Make me a Tiplink'}&quot;</div>
+                <div className="">→</div>
               </button>
             </ul>
+            <div className="flex flex-col place-items-center text-gray-400">
+              <div className="text-md">Disclaimer:</div>
+              <div className="max-w-lg text-center text-sm">
+                {
+                  'This product uses artificial intelligence ("AI"), which may produce inaccurate information. You are responsible for transactions you authorize, so please confirm accuracy of instructions prior to authorizing any transaction.'
+                }
+              </div>
+            </div>
           </div>
-          <div className="mb-8 flex flex-1 flex-col gap-3.5 md:mb-auto">
+          {/* <div className="mb-8 flex flex-1 flex-col gap-3.5 md:mb-auto">
             <h2 className="m-auto flex items-center gap-3 text-lg font-normal md:flex-col md:gap-2">
               <LightningIcon />
               {localize(lang, 'com_ui_capabilities')}
@@ -94,7 +139,7 @@ export default function Landing() {
                 {localize(lang, 'com_ui_limitation_limited_2021')}
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
         {/* {!showingTemplates && (
           <div className="mt-8 mb-4 flex flex-col items-center gap-3.5 md:mt-16">

@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2023 Danny Avila
+Copyright (c) 2023 Solana Labs
 
 ---
 

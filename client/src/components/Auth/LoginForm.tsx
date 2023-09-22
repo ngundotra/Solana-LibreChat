@@ -108,7 +108,7 @@ function LoginForm({ onSubmit }: TLoginFormProps) {
         <button
           aria-label="Sign in"
           type="submit"
-          className="w-full transform rounded-sm bg-green-500 px-4 py-3 tracking-wide text-white transition-colors duration-200 hover:bg-green-600 focus:bg-green-600 focus:outline-none"
+          className="bg-sidekickpink-100 focus:bg-sidekickpink-200 hover:bg-sidekickpink-200 w-full transform rounded-sm px-4 py-3 tracking-wide text-white transition-colors duration-200 focus:outline-none"
         >
           {localize(lang, 'com_auth_continue')}
         </button>

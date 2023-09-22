@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo, ReactNode } from 'react';
+import React, { useState, useCallback, useEffect, memo, ReactNode } from 'react';
 import { Spinner } from '~/components';
 import { useRecoilValue } from 'recoil';
 import CodeBlock from './Content/CodeBlock.jsx';
@@ -15,11 +15,13 @@ interface PluginProps {
   plugin: {
     plugin: string;
     input: string;
-    thought: string;
     loading?: boolean;
-    outputs?: string;
-    latest?: string;
-    inputs?: Input[];
+    method?: string;
+    output?: string;
+    // Old fields
+    // thought: string;
+    // latest?: string;
+    // inputs?: Input[];
   };
 }
 
@@ -31,24 +33,16 @@ type PluginIconProps = LucideProps & {
   className?: string;
 };
 
-function formatInputs(inputs: Input[]) {
-  let output = '';
-
-  for (let i = 0; i < inputs.length; i++) {
-    output += `${inputs[i].inputStr}`;
-
-    if (inputs.length > 1 && i !== inputs.length - 1) {
-      output += ',\n';
-    }
-  }
-
-  return output;
-}
-
 const Plugin: React.FC<PluginProps> = ({ plugin }) => {
-  const [loading, setLoading] = useState(plugin.loading);
-  const finished = plugin.outputs && plugin.outputs.length > 0;
+  const [loading, setLoading] = useState(plugin.output === undefined ? true : false);
+  const finished = !loading;
   const plugins: PluginsMap = useRecoilValue(store.plugins);
+
+  useEffect(() => {
+    if (plugin.output !== undefined) {
+      setLoading(false);
+    }
+  }, [plugin.output]);
 
   const getPluginName = useCallback(
     (pluginKey: string) => {
@@ -56,19 +50,19 @@ const Plugin: React.FC<PluginProps> = ({ plugin }) => {
         return null;
       }
 
-      if (pluginKey === 'n/a' || pluginKey === 'self reflection') {
+      if (pluginKey === 'n/a' || pluginKey === 'self-reflection') {
         return pluginKey;
       }
-      return plugins[pluginKey] ?? 'self reflection';
+      return plugins[pluginKey] ?? 'self-reflection';
     },
     [plugins],
   );
 
-  if (!plugin || !plugin.latest) {
+  if (!plugin) {
     return null;
   }
 
-  const latestPlugin = getPluginName(plugin.latest);
+  const latestPlugin = getPluginName(plugin.plugin);
 
   if (!latestPlugin || (latestPlugin && latestPlugin === 'n/a')) {
     return null;
@@ -79,9 +73,7 @@ const Plugin: React.FC<PluginProps> = ({ plugin }) => {
   }
 
   const generateStatus = (): ReactNode => {
-    if (!loading && latestPlugin === 'self reflection') {
-      return 'Finished';
-    } else if (latestPlugin === 'self reflection') {
+    if (latestPlugin === 'self-reflection') {
       return 'I\'m  thinking...';
     } else {
       return (
@@ -121,15 +113,15 @@ const Plugin: React.FC<PluginProps> = ({ plugin }) => {
 
               <Disclosure.Panel className="my-3 flex max-w-full flex-col gap-3">
                 <CodeBlock
-                  lang={latestPlugin?.toUpperCase() || 'INPUTS'}
-                  codeChildren={formatInputs(plugin.inputs ?? [])}
+                  lang={latestPlugin?.toUpperCase() || 'INPUT'}
+                  codeChildren={plugin.input ?? (plugin as any).inputStr}
                   plugin={true}
                   classProp="max-h-[450px]"
                 />
-                {finished && (
+                {plugin.output !== undefined && (
                   <CodeBlock
-                    lang="OUTPUTS"
-                    codeChildren={plugin.outputs ?? ''}
+                    lang="OUTPUT"
+                    codeChildren={plugin.output ?? ''}
                     plugin={true}
                     classProp="max-h-[450px]"
                   />

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import LoginForm from './LoginForm';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,8 +8,14 @@ import { localize } from '~/localization/Translation';
 import { useGetStartupConfig } from '@librechat/data-provider';
 import { GoogleIcon, OpenIDIcon, GithubIcon, DiscordIcon } from '~/components';
 
+import { WalletMultiButton } from '@librechat/wallet-adapter-react-ui';
+import { createSignInMessage } from '@solana/wallet-standard-util';
+
+// Default styles that can be overridden by your app
+import '@solana/wallet-adapter-react-ui/styles.css';
+
 function Login() {
-  const { login, error, isAuthenticated } = useAuthContext();
+  const { error, isAuthenticated } = useAuthContext();
   const { data: startupConfig } = useGetStartupConfig();
 
   const lang = useRecoilValue(store.lang);
@@ -24,7 +29,7 @@ function Login() {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-white pt-6 sm:pt-0">
+    <div className="bg-sidekickgray-100 flex min-h-screen flex-col items-center justify-center pt-6 sm:pt-0">
       <div className="mt-6 w-96 overflow-hidden bg-white px-6 py-4 sm:max-w-md sm:rounded-lg">
         <h1 className="mb-4 text-center text-3xl font-semibold">
           {localize(lang, 'com_auth_welcome_back')}
@@ -37,7 +42,13 @@ function Login() {
             {localize(lang, 'com_auth_error_login')}
           </div>
         )}
-        <LoginForm onSubmit={login} />
+        <div className="flex items-center justify-center rounded-full bg-black">
+          {/* <div className="flex flex-1"></div> */}
+          <WalletMultiButton />
+        </div>
+        {/* <LoginForm onSubmit={login} />
+        <div>Hello world!</div> */}
+        {/* Your app's components go here, nested within the context providers. */}
         {startupConfig?.registrationEnabled && (
           <p className="my-4 text-center text-sm font-light text-gray-700">
             {' '}
@@ -50,7 +61,7 @@ function Login() {
         {startupConfig?.socialLoginEnabled && (
           <>
             <div className="relative mt-6 flex w-full items-center justify-center border border-t uppercase">
-              <div className="absolute bg-white px-3 text-xs">Or</div>
+              <div className="bg-sidekick-gray-100 absolute px-3 text-xs">Or</div>
             </div>
             <div className="mt-8" />
           </>

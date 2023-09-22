@@ -7,8 +7,10 @@ const {
 const { fetchEventSource } = require('@waylaidwanderer/fetch-event-source');
 const { Agent, ProxyAgent } = require('undici');
 const BaseClient = require('./BaseClient');
+const { configDotenv } = require('dotenv');
+configDotenv();
 
-const CHATGPT_MODEL = 'gpt-3.5-turbo';
+const CHATGPT_MODEL = process.env.SIDEKICK_MODEL;
 const tokenizersCache = {};
 
 class ChatGPTClient extends BaseClient {

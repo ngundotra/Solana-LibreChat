@@ -7,7 +7,7 @@ import ChatGPTOptions from './ChatGPTOptions';
 import BingAIOptions from './BingAIOptions';
 import GoogleOptions from './GoogleOptions';
 import AnthropicOptions from './AnthropicOptions';
-import NewConversationMenu from './NewConversationMenu';
+// import NewConversationMenu from './NewConversationMenu';
 import AdjustToneButton from './AdjustToneButton';
 import Footer from './Footer';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -15,7 +15,7 @@ import { useMessageHandler } from '~/utils/handleSubmit';
 
 import store from '~/store';
 
-export default function TextChat({ isSearchView = false }) {
+export default function TextChat({ isSearchView = false, disabled = false }) {
   const inputRef = useRef(null);
   const isComposing = useRef(false);
 
@@ -27,7 +27,7 @@ export default function TextChat({ isSearchView = false }) {
   const isSubmitting = useRecoilValue(store.isSubmitting);
 
   // TODO: do we need this?
-  const disabled = false;
+  // const disabled = false;
 
   const { ask, stopGenerating } = useMessageHandler();
   const [showBingToneSetting, setShowBingToneSetting] = useState(false);
@@ -117,7 +117,7 @@ export default function TextChat({ isSearchView = false }) {
     }
 
     if (disabled) {
-      return 'Choose another model or customize GPT again';
+      return 'Please sign in with your wallet to chat.';
     }
 
     if (isNotAppendable) {
@@ -158,7 +158,7 @@ export default function TextChat({ isSearchView = false }) {
                   disabled ? 'dark:bg-gray-900' : 'dark:bg-gray-700'
                 } dark:text-white dark:shadow-[0_0_15px_rgba(0,0,0,0.10)] md:py-3 md:pl-4`}
               >
-                <NewConversationMenu />
+                {/* <NewConversationMenu /> */}
                 <TextareaAutosize
                   // set test id for e2e testing
                   data-testid="text-input"

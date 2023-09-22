@@ -1,13 +1,7 @@
 import { useState, useEffect, memo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Settings2, ChevronDownIcon } from 'lucide-react';
-import {
-  SelectDropDown,
-  PluginStoreDialog,
-  MultiSelectDropDown,
-  Button,
-  GPTIcon,
-} from '~/components';
+import { ChevronDownIcon } from 'lucide-react';
+import { PluginStoreDialog, MultiSelectDropDown, Button, GPTIcon } from '~/components';
 import EndpointOptionsPopover from '../../Endpoints/EndpointOptionsPopover';
 import SaveAsPresetDialog from '../../Endpoints/SaveAsPresetDialog';
 import { Settings, AgentSettings } from '../../Endpoints/Plugins/';
@@ -19,6 +13,7 @@ import { useAvailablePluginsQuery } from '@librechat/data-provider';
 function PluginsOptions() {
   const { data: allPlugins } = useAvailablePluginsQuery();
   const [visibile, setVisibility] = useState(true);
+  // eslint-disable-next-line
   const [advancedMode, setAdvancedMode] = useState(false);
   const [availableTools, setAvailableTools] = useState([]);
   const [showAgentSettings, setShowAgentSettings] = useState(false);
@@ -26,7 +21,7 @@ function PluginsOptions() {
   const [showPluginStoreDialog, setShowPluginStoreDialog] = useState(false);
   const [opacityClass, setOpacityClass] = useState('full-opacity');
   const [conversation, setConversation] = useRecoilState(store.conversation) || {};
-  const endpointsConfig = useRecoilValue(store.endpointsConfig);
+  // const endpointsConfig = useRecoilValue(store.endpointsConfig);
   const messagesTree = useRecoilValue(store.messagesTree);
   const { user } = useAuthContext();
 
@@ -41,30 +36,33 @@ function PluginsOptions() {
   }, [messagesTree, advancedMode]);
 
   useEffect(() => {
+    const pluginStore = { name: 'Plugin store', pluginKey: 'pluginStore', isButton: true };
+    if (!allPlugins || !user) {
+      setAvailableTools([pluginStore]);
+      return;
+    }
     if (allPlugins && user) {
-      const pluginStore = { name: 'Plugin store', pluginKey: 'pluginStore', isButton: true };
-      if (!user.plugins || user.plugins.length === 0) {
-        setAvailableTools([pluginStore]);
-        return;
-      }
-      const tools = [...user.plugins]
-        .map((el) => {
-          return allPlugins.find((plugin) => plugin.pluginKey === el);
-        })
-        .filter((el) => el);
+      // const tools = [...user.plugins]
+      //   .map((el) => {
+      //     return allPlugins.find((plugin) => plugin.pluginKey === el);
+      //   })
+      //   .filter((el) => el);
+      const tools = allPlugins;
       setAvailableTools([...tools, pluginStore]);
     }
   }, [allPlugins, user]);
 
   const triggerAgentSettings = () => setShowAgentSettings((prev) => !prev);
-  const { endpoint, agentOptions } = conversation;
+  const { agentOptions } = conversation;
+  const { endpoint } = conversation;
 
   if (endpoint !== 'gptPlugins') {
     return null;
   }
-  const models = endpointsConfig?.['gptPlugins']?.['availableModels'] || [];
+  // const models = endpointsConfig?.['gptPlugins']?.['availableModels'] || [];
+  // const models = AVAILABLE_MODELS;
 
-  const triggerAdvancedMode = () => setAdvancedMode((prev) => !prev);
+  // const triggerAdvancedMode = () => setAdvancedMode((prev) => !prev);
 
   const switchToSimpleMode = () => {
     setAdvancedMode(false);
@@ -113,7 +111,11 @@ function PluginsOptions() {
     if (isSelected) {
       update.tools = current.filter((el) => el.pluginKey !== newValue);
     } else {
-      update.tools = [...current, tool];
+      // TODO(ngundotra): reenable multiple plugins
+      // update.tools = [...current, tool];
+
+      // This effectively sets the tools to just be whatever was just selected
+      update.tools = [tool];
     }
     localStorage.setItem('lastSelectedTools', JSON.stringify(update.tools));
     setConversation((prevState) => ({
@@ -163,13 +165,13 @@ function PluginsOptions() {
             )}
           />
         </Button>
-        <SelectDropDown
+        {/* <SelectDropDown
           value={conversation.model}
           setValue={setOption('model')}
           availableValues={models}
           showAbove={true}
           className={cn(cardStyle, 'min-w-60 z-40 flex w-60', !visibile && 'hidden')}
-        />
+        /> */}
         <MultiSelectDropDown
           value={conversation.tools || []}
           isSelected={checkIfSelected}
@@ -179,7 +181,7 @@ function PluginsOptions() {
           showAbove={true}
           className={cn(cardStyle, 'min-w-60 z-50 w-60', !visibile && 'hidden')}
         />
-        <Button
+        {/* <Button
           type="button"
           className={cn(
             cardStyle,
@@ -189,7 +191,7 @@ function PluginsOptions() {
           onClick={triggerAdvancedMode}
         >
           <Settings2 className="w-4 text-gray-600 dark:text-white" />
-        </Button>
+        </Button> */}
       </div>
       <EndpointOptionsPopover
         content={

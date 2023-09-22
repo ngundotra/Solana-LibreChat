@@ -3,14 +3,10 @@ const router = express.Router();
 const { titleConvo, validateTools, PluginsClient } = require('../../../app');
 const { abortMessage, getAzureCredentials } = require('../../../utils');
 const { saveMessage, getConvoTitle, saveConvo, getConvo } = require('../../../models');
-const {
-  handleError,
-  sendMessage,
-  createOnProgress,
-  formatSteps,
-  formatAction,
-} = require('./handlers');
+const { handleError, sendMessage, createOnProgress, formatAction } = require('./handlers');
 const requireJwtAuth = require('../../../middleware/requireJwtAuth');
+const { configDotenv } = require('dotenv');
+configDotenv();
 
 const abortControllers = new Map();
 
@@ -44,7 +40,7 @@ router.post('/', requireJwtAuth, async (req, res) => {
     promptPrefix: tools.length === 0 ? req.body?.promptPrefix ?? null : null,
     tools,
     modelOptions: {
-      model: req.body?.model ?? 'gpt-4',
+      model: req.body?.model ?? process.env.SIDEKICK_MODEL,
       temperature: req.body?.temperature ?? 0,
       top_p: req.body?.top_p ?? 1,
       presence_penalty: req.body?.presence_penalty ?? 0,
@@ -193,26 +189,30 @@ const ask = async ({
       clientOptions.azure = JSON.parse(req.body?.token) ?? getAzureCredentials();
       openAIApiKey = clientOptions.azure.azureOpenAIApiKey;
     }
-    const chatAgent = new PluginsClient(openAIApiKey, clientOptions);
+    const chatAgent = new PluginsClient(openAIApiKey, clientOptions, req.user);
 
+    /// Returns the index of the last added action
     const onAgentAction = (action, start = false) => {
       const formattedAction = formatAction(action);
-      plugin.inputs.push(formattedAction);
-      plugin.latest = formattedAction.plugin;
+      console.log({ actionType: action.actionType });
+      if (action.actionType && action.actionType === 'update') {
+        plugin.inputs[plugin.inputs.length - 1] = formattedAction;
+      } else {
+        plugin.inputs.push(formattedAction);
+        plugin.latest = formattedAction.plugin;
+      }
       if (!start) {
         saveMessage(userMessage);
       }
       sendIntermediateMessage(res, { plugin });
-      // console.log('PLUGIN ACTION', formattedAction);
     };
 
-    const onChainEnd = (data) => {
-      let { intermediateSteps: steps } = data;
-      plugin.outputs = steps && steps[0].action ? formatSteps(steps) : 'An error occurred.';
+    const onChainEnd = () => {
+      // let { intermediateSteps: steps } = data;
+      // plugin.outputs = steps && steps[0].action ? formatSteps(steps) : 'An error occurred.';
       plugin.loading = false;
       saveMessage(userMessage);
       sendIntermediateMessage(res, { plugin });
-      // console.log('CHAIN END', plugin.outputs);
     };
 
     let response = await chatAgent.sendMessage(text, {

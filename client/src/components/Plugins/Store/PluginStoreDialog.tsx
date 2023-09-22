@@ -30,7 +30,6 @@ function PluginStoreDialog({ isOpen, setIsOpen }: TPluginStoreDialogProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(1);
   const [maxPage, setMaxPage] = useState<number>(1);
-  const [userPlugins, setUserPlugins] = useState<string[]>([]);
   const [selectedPlugin, setSelectedPlugin] = useState<TPlugin | undefined>(undefined);
   const [showPluginAuthForm, setShowPluginAuthForm] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -123,11 +122,11 @@ function PluginStoreDialog({ isOpen, setIsOpen }: TPluginStoreDialogProps) {
   );
 
   useEffect(() => {
-    if (user) {
-      if (user.plugins) {
-        setUserPlugins(user.plugins);
-      }
-    }
+    // if (user) {
+    //   if (user.plugins) {
+    //     setUserPlugins(user.plugins);
+    //   }
+    // }
     if (availablePlugins) {
       setMaxPage(Math.ceil(availablePlugins.length / itemsPerPage));
     }
@@ -138,7 +137,7 @@ function PluginStoreDialog({ isOpen, setIsOpen }: TPluginStoreDialogProps) {
   };
 
   return (
-    <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-[102]">
+    <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="dark relative z-[102]">
       {/* The backdrop, rendered as a fixed sibling to the panel container */}
       <div className="fixed inset-0 bg-gray-500/90 transition-opacity dark:bg-gray-800/90" />
       {/* Full-screen container to center the panel */}
@@ -194,7 +193,8 @@ function PluginStoreDialog({ isOpen, setIsOpen }: TPluginStoreDialogProps) {
                       <PluginStoreItem
                         key={index}
                         plugin={plugin}
-                        isInstalled={userPlugins.includes(plugin.pluginKey)}
+                        // isInstalled={userPlugins.includes(plugin.pluginKey)}
+                        isInstalled={true}
                         onInstall={() => onPluginInstall(plugin.pluginKey)}
                         onUninstall={() => onPluginUninstall(plugin.pluginKey)}
                       />

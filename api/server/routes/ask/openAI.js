@@ -5,6 +5,8 @@ const { getAzureCredentials, abortMessage } = require('../../../utils');
 const { saveMessage, getConvoTitle, saveConvo, getConvo } = require('../../../models');
 const { handleError, sendMessage, createOnProgress } = require('./handlers');
 const requireJwtAuth = require('../../../middleware/requireJwtAuth');
+const { configDotenv } = require('dotenv');
+configDotenv();
 
 const abortControllers = new Map();
 
@@ -27,7 +29,7 @@ router.post('/', requireJwtAuth, async (req, res) => {
     chatGptLabel: req.body?.chatGptLabel ?? null,
     promptPrefix: req.body?.promptPrefix ?? null,
     modelOptions: {
-      model: req.body?.model ?? 'gpt-3.5-turbo',
+      model: req.body?.model ?? process.env.SIDEKICK_MODEL,
       temperature: req.body?.temperature ?? 1,
       top_p: req.body?.top_p ?? 1,
       presence_penalty: req.body?.presence_penalty ?? 0,

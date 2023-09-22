@@ -1,5 +1,5 @@
 const OpenAIClient = require('./OpenAIClient');
-const { ChatOpenAI } = require('langchain/chat_models/openai');
+const { PromptLayerChatOpenAI } = require('langchain/chat_models/openai');
 const { CallbackManager } = require('langchain/callbacks');
 const { initializeCustomAgent, initializeFunctionsAgent } = require('./agents/');
 const { findMessageContent } = require('../../utils');
@@ -9,11 +9,12 @@ const { HumanChatMessage, AIChatMessage } = require('langchain/schema');
 const { instructions, imageInstructions, errorInstructions } = require('./prompts/instructions');
 
 class PluginsClient extends OpenAIClient {
-  constructor(apiKey, options = {}) {
+  constructor(apiKey, options = {}, user) {
     super(apiKey, options);
     this.sender = options.sender ?? 'Assistant';
     this.tools = [];
     this.actions = [];
+    this.user = user;
     this.openAIApiKey = apiKey;
     this.setOptions(options);
     this.executor = null;
@@ -166,7 +167,15 @@ Only respond with your conversational reply to the following User Message:
       console.debug(configOptions);
     }
 
-    return new ChatOpenAI({ credentials, configuration, ...modelOptions }, configOptions);
+    return new PromptLayerChatOpenAI(
+      {
+        promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
+        credentials,
+        configuration,
+        ...modelOptions,
+      },
+      configOptions,
+    );
   }
 
   async initialize({ user, message, onAgentAction, onChainEnd, signal }) {
@@ -256,7 +265,7 @@ Only respond with your conversational reply to the following User Message:
       returnIntermediateSteps: true,
       callbackManager: CallbackManager.fromHandlers({
         async handleAgentAction(action) {
-          handleAction(action, onAgentAction);
+          return handleAction(action, onAgentAction);
         },
         async handleChainEnd(action) {
           if (typeof onChainEnd === 'function') {
@@ -264,6 +273,7 @@ Only respond with your conversational reply to the following User Message:
           }
         },
       }),
+      user: this.user,
     });
 
     if (this.options.debug) {
@@ -273,7 +283,7 @@ Only respond with your conversational reply to the following User Message:
     onAgentAction(
       {
         tool: 'self-reflection',
-        toolInput: `Processing the User's message:\n"${message}"`,
+        input: `Processing the User's message:\n"${message}"`,
         log: '',
       },
       true,

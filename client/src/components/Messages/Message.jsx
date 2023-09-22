@@ -14,6 +14,19 @@ import { useGetConversationByIdQuery } from '@librechat/data-provider';
 import { cn } from '~/utils/';
 import store from '~/store';
 import getError from '~/utils/getError';
+// import SolanaPay from './SolanaPay';
+
+// const findSolanaPayLinks = (content) => {
+//   // Define the regular expression to search for the specific links
+//   // With lookahead to close the expression based on markdown syntax
+//   // Need the \/+ in case backend returns a double slash between https://domain//api/<etc>
+//   const regex =
+//     /https?:\/\/[a-zA-Z0-9-.]+\/+api\/handlers\/solana-pay\/qr\/[a-zA-Z0-9=&?%-.]+(?=[)"',;])/g;
+
+//   // Execute the search
+//   const foundLinks = content.match(regex);
+//   return foundLinks;
+// };
 
 export default function Message({
   conversation,
@@ -125,11 +138,33 @@ export default function Message({
     });
   };
 
+  let plugins;
+  // This does the "I'm thinking..." animation
+  if (message.plugin && message.plugin.inputs) {
+    if (message.plugin.inputs.length > 1) {
+      plugins = message.plugin.inputs.map((pluginInput, idx) => {
+        if (pluginInput.plugin !== 'self-reflection') {
+          return <Plugin key={idx} plugin={pluginInput} />;
+        } else {
+          return null;
+        }
+      });
+    } else if (
+      message.plugin.inputs.length === 1 &&
+      message.text === '<span className="result-streaming">█</span>'
+    ) {
+      plugins = <Plugin key={0} plugin={message.plugin.inputs[0]} />;
+    }
+  }
+
+  // let links = message && message.text && findSolanaPayLinks(message.text);
+  // console.log({ text: message.text, links });
+
   return (
     <>
       <div {...props} onWheel={handleWheel}>
         <div className="relative m-auto flex gap-4 p-4 text-base md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
-          <div className="relative flex h-[30px] w-[30px] flex-col items-end text-right text-xs md:text-sm">
+          <div className="h relative flex w-[30px] flex-col items-end text-right text-xs md:text-sm">
             {typeof icon === 'string' && icon.match(/[^\\x00-\\x7F]+/) ? (
               <span className=" direction-rtl w-40 overflow-x-scroll">{icon}</span>
             ) : (
@@ -142,6 +177,9 @@ export default function Message({
                 setSiblingIdx={setSiblingIdx}
               />
             </div>
+            {/* <div className="mx-auto py-2">
+              {links && links.map((link, idx) => <SolanaPay link={link} key={idx} />)}
+            </div> */}
           </div>
           <div className="relative flex w-[calc(100%-50px)] flex-col gap-1  md:gap-3 lg:w-[calc(100%-115px)]">
             {searchResult && (
@@ -154,7 +192,7 @@ export default function Message({
               </SubRow>
             )}
             <div className="flex flex-grow flex-col gap-3">
-              {message.plugin && <Plugin plugin={message.plugin} />}
+              {plugins}
               {error ? (
                 <div className="flex flex min-h-[20px] flex-grow flex-col items-start gap-2 gap-4  text-red-500">
                   <div className="rounded-md border border-red-500 bg-red-500/10 px-3 py-2 text-sm text-gray-600 dark:text-gray-100">

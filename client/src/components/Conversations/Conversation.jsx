@@ -32,7 +32,7 @@ export default function Conversation({ conversation, retainView }) {
     setSubmission(null);
 
     // set document title
-    document.title = title;
+    document.title = 'Sidekick';
 
     // set conversation to the new conversation
     if (conversation?.endpoint === 'gptPlugins') {
