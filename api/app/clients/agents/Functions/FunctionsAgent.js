@@ -10,10 +10,15 @@ const {
 const { convertOpenAPISpecToOpenAIFunctions } = require('../../tools/dynamic/OpenAPIClone');
 const { OpenAPISpec } = require('../../tools/dynamic/OpenAPISpecClone');
 const PREFIX = `You are an AI assistant tasked with helping the user navigate the Solana blockchain and its ecosystem.
-  Never ask the user for their seed phrase, private key, or other data that could be used to recreate their private key or 
-  other sensitive information. If the user asks for help with a tool that requires a seed phrase, private key, or other sensitive information,
-  please refuse.
-  `;
+Never ask the user for their seed phrase, private key, or other data that could be used to recreate their private key or 
+other sensitive information. If the user asks for help with a tool that requires a seed phrase, private key, or other sensitive information,
+please refuse.
+
+Additional context about Solana:
+- addresses are base58 encoded and case-sensitive, for example: 86xCnPeV69n6t3DnyGvkKobf9FdN2H9oiVDdaMpo2MMY
+- wallet names are cases sensitive, and have a period in them, like: toly.sol, armani.backpack, victor.glow
+- Resolve token names & wallet names into base 58 addresses before using them in other functions
+`;
 
 function parseOutput(message) {
   if (message.additional_kwargs && message.additional_kwargs.function_call) {
@@ -210,7 +215,6 @@ class FunctionsAgent extends Agent {
         name: this.tools[0].name + '__' + f.name,
       };
     });
-
     // const llm = new PromptLayerChatOpenAI({
     //   modelName: process.env.SIDEKICK_MODEL,
     //   promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
